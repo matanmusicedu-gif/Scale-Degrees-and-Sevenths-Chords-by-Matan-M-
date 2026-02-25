@@ -1171,17 +1171,19 @@ function checkWrite(sid,data,chkBtn){
   const missing=data.exp.filter(e=>!placed.some(p=>noteEq(p,e)));
   mcAtt[cur]=(mcAtt[cur]||0)+1;
   if(missing.length>0){
-    fb.className='fb err';fb.innerHTML='✗ שמות הצלילים לא נכונים. '+data.expl;
-    if(mcAtt[cur]>=2){chkBtn.disabled=true;rec('err',placed.join(', '));document.getElementById('nb')?.classList.add('show');}
-    else fb.innerHTML+='<br><b>ניסיון נוסף!</b>';
+    if(mcAtt[cur]>=2){
+      fb.className='fb err';fb.innerHTML='✗ שמות הצלילים לא נכונים. '+data.expl;
+      chkBtn.disabled=true;rec('err',placed.join(', '));document.getElementById('nb')?.classList.add('show');
+    } else {
+      fb.className='fb info';fb.innerHTML='יש ניסיון נוסף למענה. וודאו את מצב ההיפוך של האקורד 🙂';
+    }
     return;
   }
   // Notes are correct — check bass order
   const bassOk=noteEq(placed[0],data.bass);
   if(!bassOk && mcAtt[cur]<2){
     fb.className='fb info';
-    fb.innerHTML='✓ שמות הצלילים נכונים! אך בדקו את <b>סדר הצלילים — מי צריך להיות הנמוך ביותר?</b>'+
-      '<br><small style="color:#92400e">רמז: '+data.invBox+'</small><br><b>ניסיון נוסף!</b>';
+    fb.innerHTML='יש ניסיון נוסף למענה. וודאו את מצב ההיפוך של האקורד 🙂';
     return;
   }
   chkBtn.disabled=true;
