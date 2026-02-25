@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>משחק דרגות הרמוניות</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Hebrew:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f0f4f8;--ink:#111827;--hdr:#1e3a5f;--acc:#1d60b5;--accl:#dbeafe;--accm:#93c5fd;--teal:#0f766e;--grn:#15803d;--red:#b91c1c;--purp:#7c3aed;--bdr:#d1d5db;--gray:#6b7280;--card:#fff}
+body{font-family:'Noto Serif Hebrew',serif;background:var(--bg);color:var(--ink);direction:rtl;min-height:100vh;display:flex;flex-direction:column;-webkit-text-size-adjust:100%;font-size:15px}
+.pal-0{--bg:#eff6ff;--hdr:#1e3a5f;--acc:#1d60b5;--accl:#dbeafe;--accm:#93c5fd;--teal:#0f766e}
+.pal-1{--bg:#f0fdf4;--hdr:#14532d;--acc:#166534;--accl:#dcfce7;--accm:#86efac;--teal:#15803d}
+.pal-2{--bg:#faf5ff;--hdr:#4c1d95;--acc:#7c3aed;--accl:#f3e8ff;--accm:#c4b5fd;--teal:#6d28d9}
+.pal-3{--bg:#fff1f2;--hdr:#881337;--acc:#be123c;--accl:#ffe4e6;--accm:#fda4af;--teal:#9f1239}
+.pal-4{--bg:#fff7ed;--hdr:#7c2d12;--acc:#c2410c;--accl:#ffedd5;--accm:#fdba74;--teal:#ea580c}
+.pal-5{--bg:#fefce8;--hdr:#713f12;--acc:#a16207;--accl:#fef9c3;--accm:#fde047;--teal:#ca8a04;--ink:#1c1917}
+.pal-6{--bg:#ecfeff;--hdr:#164e63;--acc:#0e7490;--accl:#cffafe;--accm:#67e8f9;--teal:#0891b2}
+.pal-7{--bg:#f0fdf9;--hdr:#134e4a;--acc:#0f766e;--accl:#ccfbf1;--accm:#5eead4;--teal:#0d9488}
+.pal-8{--bg:#fdf4ff;--hdr:#3b0764;--acc:#a855f7;--accl:#fae8ff;--accm:#d8b4fe;--teal:#9333ea}
+.topbar{background:var(--hdr);color:#fff;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--acc);flex-shrink:0;transition:background .4s,border-color .4s}
+.top-title{font-size:.88rem;font-weight:700}.top-sub{font-size:.65rem;color:var(--accm);margin-top:1px}
+.stu-row{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.stu-row label{font-size:.65rem;color:var(--accm);white-space:nowrap}
+.stu-inp{padding:2px 6px;border-radius:5px;border:1px solid var(--accm);background:#ffffff22;color:#fff;font-family:inherit;font-size:.72rem;outline:none;text-align:right}
+.stu-inp::placeholder{color:#64748b}
+.q-ctr{background:#ffffff22;border-radius:14px;padding:2px 9px;font-size:.7rem;font-weight:700;color:#e0f2fe;white-space:nowrap;margin-top:3px}
+.aud-panel{background:var(--hdr);padding:5px 12px 6px;display:flex;flex-wrap:wrap;gap:7px;align-items:center;justify-content:center;border-bottom:2px solid rgba(255,255,255,.1)}
+.aud-ctrl{display:flex;align-items:center;gap:4px;white-space:nowrap}
+.aud-ctrl label{font-size:.64rem;font-weight:700;color:var(--accm)}
+.aud-ctrl input[type=range]{-webkit-appearance:none;height:3px;border-radius:2px;background:rgba(255,255,255,.25);outline:none;cursor:pointer;width:65px}
+.aud-ctrl input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--accm);cursor:pointer}
+.aud-ctrl select{background:#ffffff22;border:1px solid var(--accm);border-radius:4px;color:#fff;font-family:inherit;font-size:.67rem;padding:1px 4px;outline:none}
+.aud-ctrl select option{color:#111;background:#fff}
+.aud-val{font-size:.63rem;color:#fff;min-width:22px}
+.piano-toggle{display:flex;align-items:center;gap:4px;padding:3px 9px;border:1px solid var(--accm);border-radius:12px;color:var(--accm);background:transparent;font-family:inherit;font-size:.63rem;font-weight:700;cursor:pointer}
+.piano-toggle.open{background:var(--accm);color:var(--hdr)}
+.piano-wrap{background:#1e293b;padding:8px 14px;display:flex;justify-content:center;overflow-x:auto;border-bottom:2px solid rgba(255,255,255,.08)}
+.ls-bar{background:var(--hdr);padding:3px 14px 4px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.08)}
+.ls-track{flex:1;height:7px;background:rgba(255,255,255,.12);border-radius:4px;overflow:hidden;max-width:380px}
+.ls-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#3b82f6,#1d4ed8);transition:width .6s}
+.ls-lbl{font-size:.67rem;font-weight:700;color:var(--accm);white-space:nowrap}
+.prog-bar{height:3px;background:#334155;flex-shrink:0}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--acc),var(--teal));transition:width .3s}
+.main{flex:1;overflow-y:auto;padding:12px 10px;max-width:740px;margin:0 auto;width:100%;-webkit-overflow-scrolling:touch}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 12px;border-radius:18px;font-size:.69rem;font-weight:700;margin-bottom:8px;border:1.5px solid var(--accm);background:var(--accl);color:var(--acc)}
+.card{background:var(--card);border-radius:12px;box-shadow:0 2px 14px rgba(0,0,0,.09);padding:18px 16px;width:100%;position:relative;margin-bottom:4px}
+.ltr{direction:ltr;unicode-bidi:embed;display:inline-block;font-family:'Times New Roman',serif}
+.mc-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
+.mc-list{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.mc-btn{padding:10px 8px;border:2px solid var(--bdr);border-radius:8px;background:var(--card);font-family:inherit;font-size:.84rem;font-weight:700;cursor:pointer;transition:all .12s;color:var(--ink);text-align:center;line-height:1.4}
+.mc-list .mc-btn{text-align:right;padding:9px 12px}
+.mc-btn:hover:not(:disabled){border-color:var(--acc);background:var(--accl)}
+.mc-btn.correct{border-color:var(--grn)!important;background:#dcfce7!important;color:#166534!important}
+.mc-btn.wrong{border-color:var(--red)!important;background:#fee2e2!important;color:#991b1b!important}
+.mc-btn:disabled{opacity:.7;cursor:default}
+/* Part 1 feedback table */
+.fb-tbl{width:100%;border-collapse:collapse;margin-top:4px;font-size:.78rem}
+.fb-tbl td{padding:5px 9px;border-bottom:1px solid rgba(0,0,0,.07);vertical-align:middle}
+.fb-tbl tr:last-child td{border-bottom:none}
+.fb-tbl .lbl{color:var(--gray);font-size:.7rem;font-weight:700;white-space:nowrap;width:80px;direction:rtl}
+.fb-tbl .val{font-weight:700;direction:ltr;font-family:'Times New Roman',serif;font-size:.85rem}
+.fb-tbl .val-rtl{font-weight:700;direction:rtl;font-size:.82rem}
+.fb-scale{font-family:monospace;background:rgba(0,0,0,.07);border-radius:4px;padding:2px 7px;font-size:.72rem;direction:ltr;display:inline-block;margin-top:3px}
+.pre-play-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 16px;background:var(--teal);color:#fff;border:none;border-radius:16px;font-family:inherit;font-size:.79rem;font-weight:700;cursor:pointer;margin-top:9px}
+.pre-play-btn.playing{background:#dc2626;animation:pulse .6s infinite alternate}
+@keyframes pulse{from{opacity:1}to{opacity:.6}}
+.fb{border-radius:8px;padding:10px 13px;font-size:.82rem;line-height:1.65;text-align:right;display:none;margin-top:9px}
+.fb.ok{background:#dcfce7;color:#166534;border:2px solid #86efac;display:block}
+.fb.err{background:#fee2e2;color:#991b1b;border:2px solid #fca5a5;display:block}
+.fb.partial{background:var(--accl);color:var(--acc);border:2px solid var(--accm);display:block}
+.fb.info{background:#fef3c7;color:#92400e;border:1.5px solid #fde68a;display:block}
+/* write */
+.write-title{font-size:.9rem;font-weight:700;line-height:1.7;margin-bottom:8px}
+.inv-hint{background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:7px 11px;font-size:.76rem;color:#92400e;margin-bottom:10px;line-height:1.65}
+.scale-hint{background:#fef9c3;border:1px solid #fde68a;border-radius:5px;padding:5px 10px;font-size:.74rem;color:#92400e;margin-bottom:8px;direction:ltr;font-family:monospace}
+.ans-area{background:var(--accl);border:2px solid var(--accm);border-radius:8px;padding:10px 12px;margin-top:8px}
+.ans-lbl{font-size:.62rem;font-weight:700;color:var(--acc);letter-spacing:.04em;margin-bottom:7px}
+/* note input — v22 styles */
+.ni-wrap{margin-bottom:8px}
+.ni-row{display:flex;align-items:center;gap:4px;margin-bottom:5px;flex-wrap:wrap;direction:ltr}
+.ni-label{font-size:.65rem;font-weight:700;color:var(--gray);width:44px;direction:rtl;text-align:right;flex-shrink:0}
+.lbtn{width:30px;height:30px;border-radius:4px;border:1px solid #94a3b8;background:#fff;font-size:.88rem;font-weight:700;cursor:pointer;color:#1e293b;transition:all .1s;font-family:'Times New Roman',serif}
+.lbtn:hover{background:var(--acc);color:#fff;border-color:var(--acc)}
+.abtn{padding:3px 9px;border-radius:4px;border:1px solid #94a3b8;background:#fff;font-size:.95rem;font-weight:700;cursor:pointer;color:#374151;transition:all .1s;font-family:'Times New Roman',serif}
+.abtn:hover{background:#475569;color:#fff}
+.abtn.active{background:#1e293b;color:#fff;border-color:#1e293b}
+.abtn.sharp{color:#b45309}.abtn.sharp.active{background:#b45309;border-color:#b45309}
+.abtn.flat{color:#7c3aed}.abtn.flat.active{background:#7c3aed;border-color:#7c3aed}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0;direction:ltr;min-height:26px;align-items:center}
+.chip{display:inline-flex;align-items:center;gap:2px;background:#e0f2fe;border:1.5px solid #0ea5e9;border-radius:16px;padding:2px 6px 2px 8px;font-size:.82rem;font-weight:700;color:#0c4a6e;font-family:'Times New Roman',serif}
+.chip-name{min-width:18px;text-align:center}
+.chip-oct{font-size:.6rem;color:#0369a1;font-family:monospace;line-height:1}
+.chip-up,.chip-dn{width:15px;height:15px;border-radius:3px;border:none;cursor:pointer;font-size:.6rem;display:flex;align-items:center;justify-content:center;font-weight:900;flex-shrink:0;line-height:1}
+.chip-up{background:#bae6fd;color:#0369a1}.chip-up:hover{background:#0369a1;color:#fff}
+.chip-dn{background:#bae6fd;color:#0369a1}.chip-dn:hover{background:#0369a1;color:#fff}
+.chip-del{width:15px;height:15px;border-radius:50%;border:none;cursor:pointer;background:#fecdd3;color:#be123c;font-size:.65rem;display:flex;align-items:center;justify-content:center;font-weight:900;flex-shrink:0}
+.chip-del:hover{background:#be123c;color:#fff}
+.chip-empty{font-size:.75rem;color:#94a3b8;font-style:italic}
+.ni-actions{display:flex;gap:5px;align-items:center;direction:ltr;flex-wrap:wrap;margin-top:4px}
+.ubtn{padding:2px 9px;border-radius:9px;border:1px solid #fca5a5;background:#fee2e2;font-size:.68rem;font-weight:700;cursor:pointer;color:#991b1b;font-family:inherit}
+.ubtn:hover{background:#991b1b;color:#fff}
+.cbtn{padding:2px 9px;border-radius:9px;border:1px solid var(--bdr);background:#f1f5f9;font-size:.68rem;font-weight:700;cursor:pointer;color:var(--gray);font-family:inherit}
+.cbtn:hover{background:#475569;color:#fff}
+.play-write-btn{display:inline-flex;align-items:center;gap:4px;padding:5px 14px;background:var(--teal);color:#fff;border:none;border-radius:16px;font-family:inherit;font-size:.76rem;font-weight:700;cursor:pointer;margin-top:7px}
+.play-write-btn.playing{background:#dc2626}
+.staff-outer{background:#fff;border-radius:5px;border:1px solid var(--bdr);overflow:hidden;margin-top:7px}
+.staff-svg{display:block;width:100%;height:auto}
+.chk-row{display:flex;align-items:center;gap:8px;margin-top:9px;flex-wrap:wrap}
+.chk-btn{padding:8px 19px;background:var(--hdr);color:#fff;border:none;border-radius:6px;font-family:inherit;font-size:.84rem;font-weight:700;cursor:pointer}
+.chk-btn:disabled{opacity:.4;cursor:default}
+.chk-btn:hover:not(:disabled){background:var(--acc)}
+.next-btn{padding:8px 28px;background:var(--teal);color:#fff;border:none;border-radius:6px;font-family:inherit;font-size:.84rem;font-weight:700;cursor:pointer;margin-top:9px;display:none}
+.next-btn.show{display:inline-block}
+.flag-btn{position:absolute;top:6px;left:6px;background:none;border:none;font-size:.88rem;cursor:pointer;opacity:.35;padding:3px}
+.flag-btn:hover,.flag-btn.active{opacity:1}
+/* table */
+.dtable{width:100%;border-collapse:collapse;font-size:.74rem;direction:ltr;margin:8px 0}
+.dtable th,.dtable td{border:1px solid var(--bdr);padding:5px 4px;text-align:center;vertical-align:middle;min-width:44px}
+.dtable th{background:#f1f5f9;font-weight:700;font-size:.7rem}
+.rh{font-size:.82rem;font-weight:700;color:var(--acc)}
+.ex-row td{background:#f0fdf4}
+.ex-rl{background:#bbf7d0!important;color:#14532d;font-weight:700;direction:rtl;text-align:right;padding:5px 7px!important;font-size:.7rem}
+.ce{font-size:.75rem;font-weight:700;color:#1f2937}
+.cq{font-size:.58rem;color:var(--gray);display:block}
+.hint-cell{background:#fffbeb!important;border:2px solid #f59e0b!important}
+.hc{font-size:.8rem;font-weight:700;color:#b45309}
+.hs{font-size:.57rem;color:#d97706;display:block}
+.a-cell{background:var(--accl)!important;border:1.5px solid var(--accm)!important;padding:2px!important}
+.a-cell input{width:100%;border:none;background:transparent;text-align:center;font-family:'Times New Roman',serif;font-size:.74rem;color:var(--ink);outline:none;padding:2px 1px}
+.rn-inp{width:100%;border:none;background:transparent;font-family:inherit;font-size:.7rem;font-weight:700;color:var(--acc);outline:none;direction:rtl}
+.rl-a{background:var(--accl)!important;border:1.5px solid var(--accm)!important;direction:rtl;text-align:right;padding:4px 6px!important}
+/* bottom nav */
+.botbar{background:var(--hdr);border-top:2px solid var(--acc);padding:6px 8px 8px;position:sticky;bottom:0;flex-shrink:0}
+.bot-inner{max-width:740px;margin:0 auto;display:flex;flex-direction:column;gap:3px}
+.bot-lbl{font-size:.57rem;color:var(--accm);text-align:center;letter-spacing:.04em}
+.nav-dots{display:flex;gap:2px;justify-content:center;flex-wrap:wrap;align-items:center}
+.ndot{width:24px;height:24px;border-radius:4px;background:rgba(255,255,255,.1);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:700;color:rgba(255,255,255,.45);transition:all .18s;border:2px solid transparent;flex-shrink:0;position:relative}
+.ndot:hover{background:rgba(255,255,255,.2);color:#fff}
+.ndot.cur{background:var(--acc);color:#fff;border-color:var(--accm);transform:scale(1.1)}
+.ndot.done-ok{background:#166534;color:#fff}
+.ndot.done-err{background:#991b1b;color:#fff}
+.ndot.done-p{background:#1e40af;color:#fff}
+.ndot.flagged::after{content:'🚩';position:absolute;top:-6px;right:-3px;font-size:.5rem}
+.sec-div{width:1px;height:18px;background:rgba(255,255,255,.2);flex-shrink:0;margin:0 1px}
+/* score */
+.sc-card{background:var(--card);border-radius:12px;padding:20px 16px;box-shadow:0 2px 14px rgba(0,0,0,.09);width:100%}
+.sc-big{font-size:2.8rem;font-weight:700;color:var(--acc);line-height:1}
+.sc-bar{height:8px;background:rgba(0,0,0,.08);border-radius:4px;overflow:hidden;margin:9px 0 3px}
+.sc-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--acc),var(--teal));transition:width 1.2s ease}
+.part-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--bdr);font-size:.8rem}
+.part-row:last-child{border-bottom:none}
+.tag{display:inline-block;border-radius:4px;padding:2px 7px;font-size:.68rem;font-weight:700;margin:2px}
+.tag-ok{background:#dcfce7;color:#166534}
+.tag-err{background:#fee2e2;color:#991b1b}
+.tag-warn{background:#fef3c7;color:#92400e}
+.msg-box{border-radius:8px;padding:10px 13px;text-align:center;margin:8px 0;font-size:.83rem;font-weight:700;line-height:1.55}
+.msg-great{background:linear-gradient(135deg,#fef3c7,#dcfce7);border:2px solid #86efac;color:#166534}
+.msg-ok{background:var(--accl);border:2px solid var(--accm);color:var(--acc)}
+.msg-retry{background:#fee2e2;border:2px solid #fca5a5;color:#991b1b}
+.abtab{width:100%;border-collapse:collapse;margin-top:8px;font-size:.73rem;text-align:right}
+.abtab th{background:var(--hdr);color:#fff;padding:4px 7px;font-weight:700}
+.abtab td{padding:4px 7px;border-bottom:1px solid var(--bdr)}
+.abtab tr:nth-child(even) td{background:var(--accl)}
+.pdf-btn{padding:8px 20px;background:var(--purp);color:#fff;border:none;border-radius:6px;font-family:inherit;font-size:.82rem;font-weight:700;cursor:pointer;margin-top:9px}
+.rst-btn{padding:8px 22px;background:var(--hdr);color:#fff;border:none;border-radius:6px;font-family:inherit;font-size:.82rem;font-weight:700;cursor:pointer;margin-top:6px}
+.wm{text-align:center;padding:7px 0 5px;font-size:.67rem;color:var(--gray);opacity:.5;flex-shrink:0;font-style:italic}
+
+@media print{
+  @page{size:A4 portrait;margin:8mm}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .topbar,.aud-panel,.piano-wrap,.ls-bar,.prog-bar,.botbar,.next-btn,.play-write-btn,.pre-play-btn,.chk-btn,.flag-btn,.wm,.pdf-btn,.rst-btn,.ni-row,.ni-actions,.inv-hint,.scale-hint,.badge,.part-row+.part-row~div:last-child{display:none!important}
+  body{background:#fff!important;font-size:11px;min-height:unset}
+  .main{overflow:visible;padding:4px;max-width:100%}
+  .card,.sc-card{box-shadow:none!important;break-inside:avoid;page-break-inside:avoid;margin-bottom:6px}
+  .sc-card{transform:scale(0.92);transform-origin:top center;padding:10px}
+  .sc-big{font-size:2rem}
+  .abtab{font-size:.65rem}
+  html,body{height:auto;overflow:visible}
+}
+@media(max-width:480px){.mc-grid{grid-template-columns:1fr 1fr}.ndot{width:20px;height:20px}}
+</style>
+</head>
+<body class="pal-0">
+
+<div class="topbar">
+  <div><div class="top-title">משחק דרגות הרמוניות</div><div class="top-sub">חלק א׳ · ב׳ · ג׳ · ד׳</div></div>
+  <div style="text-align:left">
+    <div class="stu-row">
+      <label>שם:</label><input id="sname" class="stu-inp" placeholder="שם" style="width:90px">
+      <label>כיתה:</label><input id="sclass" class="stu-inp" placeholder="כיתה" style="width:50px">
+    </div>
+    <div class="q-ctr" id="q-ctr">שאלה 1 / 25</div>
+  </div>
+</div>
+
+<div class="aud-panel">
+  <div class="aud-ctrl"><label>🐢</label>
+    <input type="range" id="spd" min="0.4" max="2" step="0.1" value="1"
+      oninput="AS.speed=+this.value;document.getElementById('spd-v').textContent=this.value+'×'">
+    <span id="spd-v" class="aud-val">1×</span></div>
+  <div class="aud-ctrl"><label>🔊</label>
+    <input type="range" id="vol" min="0.02" max="0.35" step="0.01" value="0.14" oninput="AS.volume=+this.value"></div>
+  <div class="aud-ctrl"><label>🎹</label>
+    <select id="tmb" onchange="AS.timbre=this.value">
+      <option value="piano">פסנתר</option><option value="organ">אורגן</option>
+      <option value="strings">כינור</option><option value="bell">פעמון</option><option value="marimba">מרימבה</option>
+    </select></div>
+  <button class="piano-toggle" id="piano-toggle" onclick="togglePiano()">🎹 הצג מקלדת</button>
+</div>
+
+<div class="piano-wrap" id="piano-wrap" style="display:none">
+  <svg id="piano-svg" viewBox="0 0 232 76" width="464" height="152" xmlns="http://www.w3.org/2000/svg"></svg>
+</div>
+
+<div class="ls-bar">
+  <span class="ls-lbl">ציון: <span id="ls-pct">0%</span></span>
+  <div class="ls-track"><div class="ls-fill" id="ls-fill" style="width:0%"></div></div>
+</div>
+<div class="prog-bar"><div class="prog-fill" id="prog-fill"></div></div>
+<div class="main" id="main"></div>
+
+<div class="botbar">
+  <div class="bot-inner">
+    <div class="bot-lbl">ניווט · 🚩 לסמן לחזרה</div>
+    <div class="nav-dots" id="nav-dots"></div>
+  </div>
+</div>
+<div class="wm">Matan Margolin · משחק דרגות הרמוניות</div>
+
+<script>
+'use strict';
+
+const CLEF_B64='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';
+const TOP_Y  = 30;    // y of top staff line (F5)
+const GAP    = 18;    // pixels between adjacent lines
+const SVG_H  = 160;   // total SVG height — larger for readability
+const SVG_W  = 700;   // viewBox width
+const CLEF_FS = 74;   // unused - kept for reference
+const CLEF_X  = 1;
+// Treble clef as base64 PNG (rendered via Python/FreeSerif, guaranteed cross-platform)
+// Image is 50×110 SVG units, G4 curl at 52.7% from top = G4 line in staff
+const CLEF_Y  = 82;
+const CLEF_FONT = "serif"; // fallback only
+const NOTE_START_X = 60; // first note x (after wider clef)
+const NOTE_SP = 55;       // horizontal spacing between notes
+const WNR_X   = 10;       // whole-note ellipse rx — larger
+const WNR_Y   = 7;        // whole-note ellipse ry — larger
+
+// Staff position index (half-steps from top line):
+// 0=F5(top), 1=E5, 2=D5, 3=C5, 4=B4(middle), 5=A4, 6=G4(2nd), 7=F4, 8=E4(bottom), 9=D4, 10=C4(ledger)
+// Each octave = 7 positions
+const BASE_POS = {C:10,D:9,E:8,F:7,G:6,A:5,B:4}; // default octave (4/5 split)
+
+function staffPos(letter, octaveAdj) {
+  return BASE_POS[letter] - (octaveAdj || 0) * 7;
+}
+function posY(p) { return TOP_Y + p * (GAP / 2); }
+
+// ============================================================
+//  DRAW STAFF
+// ============================================================
+function drawStaff(svgEl, notes) {
+  const ns = 'http://www.w3.org/2000/svg';
+  svgEl.setAttribute('viewBox', `0 -20 ${SVG_W} ${SVG_H + 20}`);
+  svgEl.setAttribute('preserveAspectRatio', 'xMinYMid meet');
+  svgEl.innerHTML = '';
+
+  // 5 staff lines — full width
+  for (let i = 0; i < 5; i++) {
+    const y = TOP_Y + i * GAP;
+    mkLine(svgEl, 0, y, SVG_W, y, '#2a2a2a', 1.1);
+  }
+  // Left bar line
+  mkLine(svgEl, 0.5, TOP_Y, 0.5, TOP_Y+4*GAP, '#2a2a2a', 2);
+  // Right bar line
+  mkLine(svgEl, SVG_W-0.5, TOP_Y, SVG_W-0.5, TOP_Y+4*GAP, '#2a2a2a', 2);
+
+  // Treble clef — embedded PNG, curl precisely on G4 (2nd line from bottom)
+  const clef = document.createElementNS(ns, 'image');
+  clef.setAttribute('x', '0');
+  clef.setAttribute('y', '-24');
+  clef.setAttribute('width', '50');
+  clef.setAttribute('height', String(SVG_H + 20));
+  clef.setAttribute('preserveAspectRatio', 'xMinYMin meet');
+  clef.setAttribute('href', 'data:image/png;base64,'+CLEF_B64); // clef.setAttribute('href_PLACEHOLDER', 'data:image/png;base64,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');
+  clef.setAttributeNS('http://www.w3.org/1999/xlink','href','data:image/png;base64,'+CLEF_B64);
+  svgEl.appendChild(clef);
+
+  if (!notes || notes.length === 0) return;
+
+  // Sort notes by staff position (top to bottom = ascending pos)
+  const sorted = notes
+    .filter(n => BASE_POS[n.letter] !== undefined)
+    .map(n => ({ ...n, pos: staffPos(n.letter, n.octaveAdj) }))
+    .sort((a, b) => a.pos - b.pos);
+
+  // Determine x offsets — offset adjacent notes (|Δpos|≤1) rightward
+  const xOff = new Array(sorted.length).fill(0);
+  for (let i = 0; i < sorted.length - 1; i++) {
+    if (Math.abs(sorted[i+1].pos - sorted[i].pos) <= 1) {
+      xOff[i+1] = WNR_X * 2 + 4;
+    }
+  }
+
+  const baseX = NOTE_START_X + 20; // center of chord slot
+
+  sorted.forEach((n, i) => {
+    const nx = baseX + xOff[i];
+    const ny = posY(n.pos);
+    drawWholeNote(svgEl, nx, ny, n.acc, n.pos);
+  });
+}
+
+function drawWholeNote(svgEl, nx, ny, acc, pos) {
+  const ns = 'http://www.w3.org/2000/svg';
+
+  // Ledger lines
+  const ledgerPositions = [];
+  if (pos >= 10) ledgerPositions.push(10);
+  if (pos >= 12) ledgerPositions.push(12);
+  if (pos >= 14) ledgerPositions.push(14);
+  if (pos <= -2) ledgerPositions.push(-2);
+  if (pos <= -4) ledgerPositions.push(-4);
+  ledgerPositions.forEach(lp => {
+    mkLine(svgEl, nx-WNR_X-5, posY(lp), nx+WNR_X+5, posY(lp), '#2a2a2a', 1.2);
+  });
+
+  // Accidental
+  if (acc && acc !== 'n') {
+    const sym = acc === '#' ? '♯' : '♭';
+    const a = document.createElementNS(ns, 'text');
+    a.setAttribute('x', nx - WNR_X - 11);
+    a.setAttribute('y', ny + 4);
+    a.setAttribute('font-size', '17');
+    a.setAttribute('font-family', "'Times New Roman',serif");
+    a.setAttribute('fill', '#1d4ed8');
+    a.setAttribute('text-anchor', 'middle');
+    a.textContent = sym;
+    svgEl.appendChild(a);
+  }
+
+  // Whole note: open oval, slightly tilted
+  const e = document.createElementNS(ns, 'ellipse');
+  e.setAttribute('cx', nx); e.setAttribute('cy', ny);
+  e.setAttribute('rx', WNR_X); e.setAttribute('ry', WNR_Y);
+  e.setAttribute('fill', '#fff');
+  e.setAttribute('stroke', '#1d4ed8'); e.setAttribute('stroke-width', '2');
+  e.setAttribute('transform', `rotate(-16,${nx},${ny})`);
+  svgEl.appendChild(e);
+
+  // Inner hole (oval cutout to make it look like real whole note)
+  const hole = document.createElementNS(ns, 'ellipse');
+  hole.setAttribute('cx', nx); hole.setAttribute('cy', ny);
+  hole.setAttribute('rx', WNR_X - 3); hole.setAttribute('ry', WNR_Y - 2);
+  hole.setAttribute('fill', '#fff');
+  hole.setAttribute('transform', `rotate(20,${nx},${ny})`);
+  svgEl.appendChild(hole);
+
+  // Note name label (small, below)
+  const lbl = document.createElementNS(ns, 'text');
+  lbl.setAttribute('x', nx);
+  lbl.setAttribute('y', ny + 20);
+  lbl.setAttribute('text-anchor', 'middle');
+  lbl.setAttribute('font-size', '9');
+  lbl.setAttribute('fill', '#64748b');
+  lbl.setAttribute('font-family', 'monospace');
+  const accSym = acc === '#' ? '♯' : acc === 'b' ? '♭' : '';
+  lbl.textContent = '';
+  svgEl.appendChild(lbl);
+}
+
+function mkLine(parent, x1, y1, x2, y2, stroke, sw) {
+  const ns = 'http://www.w3.org/2000/svg';
+  const l = document.createElementNS(ns, 'line');
+  l.setAttribute('x1',x1); l.setAttribute('y1',y1);
+  l.setAttribute('x2',x2); l.setAttribute('y2',y2);
+  l.setAttribute('stroke',stroke); l.setAttribute('stroke-width',sw);
+  parent.appendChild(l);
+}
+
+// ============================================================
+//  NOTE INPUT STATE
+// ============================================================
+const NS = {}; // NS[staffId] = [{uid, letter, acc, octaveAdj}]
+let uid_ctr = 0;
+const activeAcc = {}; // staffId → '' | '#' | 'b'
+
+function initNI(staffId) {
+  NS[staffId] = [];
+  activeAcc[staffId] = '';
+}
+
+function addNote(staffId, letter) {
+  const acc = activeAcc[staffId] || '';
+  let oa = 0;
+  if (NS[staffId].length > 0) {
+    // auto-place above lowest existing note
+    const loMidi = Math.min(...NS[staffId].map(n => noteToMidiSimple(n.letter, n.acc, n.octaveAdj)));
+    const nm = noteToMidiSimple(letter, acc, 0);
+    if (nm <= loMidi) { oa = 1; if (noteToMidiSimple(letter, acc, 1) <= loMidi) oa = 2; }
+  }
+  NS[staffId].push({ uid: uid_ctr++, letter, acc, octaveAdj: oa });
+  refreshNI(staffId);
+}
+
+function delNote(staffId, uid) {
+  NS[staffId] = NS[staffId].filter(n => n.uid !== uid);
+  refreshNI(staffId);
+}
+
+function changeOctave(staffId, uid, delta) {
+  const n = NS[staffId].find(n => n.uid === uid);
+  if (!n) return;
+  const newAdj = (n.octaveAdj || 0) + delta;
+  // Limit range to keep on visible staff
+  if (newAdj < -2 || newAdj > 2) return;
+  n.octaveAdj = newAdj;
+  refreshNI(staffId);
+}
+
+function undoLast(staffId) {
+  NS[staffId].pop();
+  refreshNI(staffId);
+}
+
+function clearAll(staffId) {
+  NS[staffId] = [];
+  refreshNI(staffId);
+}
+
+function refreshNI(staffId) {
+  const chipsEl = document.getElementById('chips-' + staffId);
+  if (chipsEl) {
+    chipsEl.innerHTML = '';
+    const notes = NS[staffId];
+    if (notes.length === 0) {
+      const e = document.createElement('span');
+      e.className = 'chip-empty'; e.textContent = 'טרם הוזנו צלילים';
+      chipsEl.appendChild(e);
+    } else {
+      notes.forEach(n => chipsEl.appendChild(makeChip(staffId, n)));
+    }
+  }
+  const svgEl = document.getElementById('staff-' + staffId);
+  if (svgEl) drawStaff(svgEl, NS[staffId]);
+}
+
+function makeChip(staffId, note) {
+  const accSym = note.acc === '#' ? '♯' : note.acc === 'b' ? '♭' : '';
+  const octLabel = note.octaveAdj > 0 ? '+'+ note.octaveAdj : note.octaveAdj < 0 ? String(note.octaveAdj) : '';
+
+  const chip = document.createElement('span');
+  chip.className = 'chip';
+
+  const nameEl = document.createElement('span');
+  nameEl.className = 'chip-name';
+  nameEl.textContent = note.letter + accSym;
+  chip.appendChild(nameEl);
+
+  if (octLabel) {
+    const octEl = document.createElement('span');
+    octEl.className = 'chip-oct';
+    octEl.textContent = octLabel;
+    chip.appendChild(octEl);
+  }
+
+  // Up arrow
+  const upBtn = document.createElement('button');
+  upBtn.className = 'chip-up'; upBtn.textContent = '▲'; upBtn.title = 'אוקטבה למעלה';
+  upBtn.onclick = () => changeOctave(staffId, note.uid, 1);
+  chip.appendChild(upBtn);
+
+  // Down arrow
+  const dnBtn = document.createElement('button');
+  dnBtn.className = 'chip-dn'; dnBtn.textContent = '▼'; dnBtn.title = 'אוקטבה למטה';
+  dnBtn.onclick = () => changeOctave(staffId, note.uid, -1);
+  chip.appendChild(dnBtn);
+
+  // Delete
+  const delBtn = document.createElement('button');
+  delBtn.className = 'chip-del'; delBtn.textContent = '×'; delBtn.title = 'מחק';
+  delBtn.onclick = () => delNote(staffId, note.uid);
+  chip.appendChild(delBtn);
+
+  return chip;
+}
+
+// ============================================================
+//  BUILD NOTE INPUT WIDGET
+// ============================================================
+function buildNI(staffId, container) {
+  initNI(staffId);
+
+  // Accidental row
+  const accRow = document.createElement('div');
+  accRow.className = 'ni-row';
+  accRow.innerHTML = '<span class="ni-label">סימן:</span>';
+  [['♮','',''],['♯','#','sharp'],['♭','b','flat']].forEach(([sym,val,cls]) => {
+    const b = document.createElement('button');
+    b.className = 'abtn ' + cls + (val === '' ? ' active' : '');
+    b.textContent = sym;
+    b.onclick = () => {
+      activeAcc[staffId] = val;
+      accRow.querySelectorAll('.abtn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+    };
+    accRow.appendChild(b);
+  });
+  container.appendChild(accRow);
+
+  // Letter row
+  const letRow = document.createElement('div');
+  letRow.className = 'ni-row';
+  letRow.innerHTML = '<span class="ni-label">צליל:</span>';
+  ['C','D','E','F','G','A','B'].forEach(letter => {
+    const b = document.createElement('button');
+    b.className = 'lbtn'; b.textContent = letter;
+    b.onclick = () => addNote(staffId, letter);
+    letRow.appendChild(b);
+  });
+  container.appendChild(letRow);
+
+  // Chips
+  const chips = document.createElement('div');
+  chips.className = 'chips'; chips.id = 'chips-' + staffId;
+  const emp = document.createElement('span');
+  emp.className = 'chip-empty'; emp.textContent = 'טרם הוזנו צלילים';
+  chips.appendChild(emp);
+  container.appendChild(chips);
+
+  // Actions
+  const acts = document.createElement('div');
+  acts.className = 'ni-actions';
+  const undo = document.createElement('button'); undo.className='ubtn'; undo.textContent='← ביטול';
+  undo.onclick = () => undoLast(staffId);
+  const clr = document.createElement('button'); clr.className='cbtn'; clr.textContent='נקה הכל';
+  clr.onclick = () => clearAll(staffId);
+  acts.appendChild(undo); acts.appendChild(clr);
+  container.appendChild(acts);
+}
+
+
+// ── MIDI helper (simple, for auto-octave placement) ──────────────────────
+const MIDI_LET = {C:0,D:2,E:4,F:5,G:7,A:9,B:11};
+function noteToMidiSimple(letter, acc, octAdj) {
+  let m = 12 * (4 + (octAdj||0) + 1) + MIDI_LET[letter];
+  if (acc==='#') m++; if (acc==='b') m--;
+  return m;
+}
+
+// ── PIANO ─────────────────────────────────────────────────────────────────
+(function(){
+  const svg=document.getElementById('piano-svg');
+  const ns='http://www.w3.org/2000/svg';
+  const whites=[
+    {n:'C4',m:60},{n:'D4',m:62},{n:'E4',m:64},{n:'F4',m:65},{n:'G4',m:67},{n:'A4',m:69},{n:'B4',m:71},
+    {n:'C5',m:72},{n:'D5',m:74},{n:'E5',m:76},{n:'F5',m:77},{n:'G5',m:79},{n:'A5',m:81},{n:'B5',m:83}
+  ];
+  const bpat=[[10,1],[26,3],[58,6],[74,8],[90,10]];
+  const octW=112;
+  whites.forEach((k,i)=>{
+    const r=document.createElementNS(ns,'rect');r.id='pk-'+k.m;
+    [['x',i*16],['y',0],['width',15],['height',70],['fill','#fff'],['stroke','#999'],['stroke-width','0.7'],['rx','1']].forEach(([a,v])=>r.setAttribute(a,v));
+    svg.appendChild(r);
+    const t=document.createElementNS(ns,'text');t.setAttribute('x',i*16+7.5);t.setAttribute('y',64);
+    t.setAttribute('text-anchor','middle');t.setAttribute('font-size','5');t.setAttribute('fill','#888');t.setAttribute('font-family','monospace');
+    t.textContent=k.n.replace(/[45]/,'');svg.appendChild(t);
+  });
+  for(let o=0;o<2;o++){bpat.forEach(([off,semi])=>{
+    const r=document.createElementNS(ns,'rect');r.id='pk-'+(60+o*12+semi);
+    [['x',o*octW+off-1],['y',0],['width',10],['height',44],['fill','#222'],['stroke','#000'],['stroke-width','0.5'],['rx','1']].forEach(([a,v])=>r.setAttribute(a,v));
+    svg.appendChild(r);
+  });}
+})();
+
+function togglePiano(){
+  const w=document.getElementById('piano-wrap'),b=document.getElementById('piano-toggle');
+  const show=w.style.display==='none';
+  w.style.display=show?'flex':'none';
+  b.classList.toggle('open',show);
+  b.textContent=show?'🎹 הסתר מקלדת':'🎹 הצג מקלדת';
+}
+function hlPiano(midis,ms){
+  midis.forEach(m=>{
+    const el=document.getElementById('pk-'+m);if(!el)return;
+    const isB=el.getAttribute('height')==='44';
+    el.setAttribute('fill','#f97316');
+    setTimeout(()=>el.setAttribute('fill',isB?'#222':'#fff'),ms);
+  });
+}
+
+// ── AUDIO ─────────────────────────────────────────────────────────────────
+let audioCtx=null;
+let AS={speed:1,volume:0.14,timbre:'piano'};
+let activePlayId=0;
+function getCtx(){if(!audioCtx||audioCtx.state==='closed')audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();return audioCtx;}
+function stopAll(){if(audioCtx){try{audioCtx.close();}catch(e){}}audioCtx=null;activePlayId++;}
+const TMBR={
+  piano:{h:[1,2,3,4,5,6],a:[1,.5,.25,.12,.06,.03],dc:2.8,at:0.008},
+  organ:{h:[1,2,3,4,6,8],a:[1,.4,.3,.2,.15,.1],dc:4.0,at:0.015},
+  strings:{h:[1,2,3,4,5,6,7],a:[1,.6,.5,.35,.25,.15,.08],dc:3.5,at:0.12},
+  bell:{h:[1,2.756,5.404,8.933],a:[1,.5,.2,.08],dc:5.0,at:0.005},
+  marimba:{h:[1,3,5,7],a:[1,.15,.08,.03],dc:1.4,at:0.004}
+};
+function mf(m){return 440*Math.pow(2,(m-69)/12);}
+function playN(m,t0,ctx){
+  const tm=TMBR[AS.timbre]||TMBR.piano;
+  const mg=ctx.createGain();mg.gain.value=AS.volume;mg.connect(ctx.destination);
+  tm.h.forEach((h,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=mf(m)*h;g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(tm.a[i],t0+tm.at);g.gain.exponentialRampToValueAtTime(0.0001,t0+tm.dc);o.connect(g);g.connect(mg);o.start(t0);o.stop(t0+tm.dc+0.05);});
+}
+
+// ── VOICE LEADING ────────────────────────────────────────────────────────
+// Returns new chord array where each chord is voiced to minimize movement from previous
+function voiceLead(chords) {
+  if (!chords || chords.length <= 1) return chords;
+  const LO=52, HI=83; // E3–B5 playable range
+
+  function voicings(midis) {
+    const pcs = midis.map(m => m%12);
+    const result = [];
+    function gen(i, prev, cur) {
+      if (i===pcs.length){result.push([...cur]);return;}
+      for (let oct=3;oct<=6;oct++){
+        const m=oct*12+pcs[i];
+        if(m>=LO&&m<=HI&&m>=prev) gen(i+1, m, [...cur, m]);
+      }
+    }
+    gen(0, LO, []);
+    return result;
+  }
+
+  const out = [chords[0]];
+  for (let i=1;i<chords.length;i++){
+    const prev = out[i-1];
+    const cands = voicings(chords[i]);
+    if(!cands.length){out.push(chords[i]);continue;}
+    let best=cands[0], bestCost=Infinity;
+    for (const c of cands){
+      const n=Math.min(prev.length,c.length);
+      let cost=0;
+      for(let j=0;j<n;j++) cost+=Math.abs(prev[j]-c[j]);
+      // Penalise extreme registers
+      for(const m of c){if(m<55)cost+=6;if(m>79)cost+=3;}
+      if(cost<bestCost){bestCost=cost;best=c;}
+    }
+    out.push(best);
+  }
+  return out;
+}
+
+// Block-chord playback: all notes at once, 0.8s between chords, with voice leading
+function playHarmProg(chords, onDone){
+  stopAll();const myId=++activePlayId;const ctx=getCtx();
+  const vled = voiceLead(chords); // apply voice leading
+  const gap=0.8/AS.speed;
+  let t=ctx.currentTime+0.05;
+  vled.forEach(midis=>{
+    midis.forEach(m=>playN(m,t,ctx));
+    hlPiano(midis,Math.min(gap*900,2500));
+    t+=gap;
+  });
+  const tm=TMBR[AS.timbre]||TMBR.piano;
+  const totalMs=(t-ctx.currentTime+tm.dc)*1000+200;
+  setTimeout(()=>{if(activePlayId===myId&&onDone)onDone();},totalMs);
+}
+
+// Block single chord
+function playHarmChord(midis, onDone){
+  stopAll();const myId=++activePlayId;const ctx=getCtx();
+  const t=ctx.currentTime+0.05;
+  midis.forEach(m=>playN(m,t,ctx));
+  hlPiano(midis,2200);
+  const tm=TMBR[AS.timbre]||TMBR.piano;
+  setTimeout(()=>{if(activePlayId===myId&&onDone)onDone();},(tm.dc+0.3)*1000);
+}
+
+// Arpeggio for write section playback
+function playArpChord(midis, onDone){
+  stopAll();const myId=++activePlayId;const ctx=getCtx();
+  const sp=AS.speed;const tm=TMBR[AS.timbre]||TMBR.piano;const step=0.28/sp;
+  const now=ctx.currentTime+0.05;
+  midis.forEach((m,i)=>playN(m,now+i*step,ctx));
+  const holdAt=now+(midis.length-1)*step+0.6;
+  midis.forEach(m=>playN(m,holdAt,ctx));
+  hlPiano(midis,2000);
+  const totalMs=((holdAt+tm.dc)-now)*1000+200;
+  setTimeout(()=>{if(activePlayId===myId&&onDone)onDone();},totalMs);
+}
+
+// ── ENHARMONIC ────────────────────────────────────────────────────────────
+const EH={'C#':'Db','Db':'C#','D#':'Eb','Eb':'D#','F#':'Gb','Gb':'F#','G#':'Ab','Ab':'G#','A#':'Bb','Bb':'A#','E#':'F','F':'E#','B#':'C','Cb':'B'};
+function normN(n){return n.toUpperCase().replace('♯','#').replace('♭','b').replace('♮','');}
+function noteEq(a,b){const pa=normN(a),pb=normN(b);return pa===pb||EH[pa]===pb;}
+
+// ── EXAM DATA ─────────────────────────────────────────────────────────────
+const P1_BASE=[
+  {badge:'חלק א׳ — זיהוי דרגות',qLabel:'שאלה 1',degreeName:'V',keyName:'E Major',
+   chordName:'B Major',chordNotes:'B – D♯ – F♯',
+   q:'מה האקורד על דרגה <span class="ltr">V</span> בסולם <span class="ltr">E Major</span>?',
+   opts:['B Major','D Major','F♯m','Bm'],ans:0,
+   chord:[59,63,66],
+   staffNotes:[{letter:'B',acc:'',octaveAdj:-1},{letter:'D',acc:'#',octaveAdj:0},{letter:'F',acc:'#',octaveAdj:0}],
+   scale:'E – F♯ – G♯ – A – B – C♯ – D♯'},
+  {badge:'חלק א׳ — זיהוי דרגות',qLabel:'שאלה 2',degreeName:'IV',keyName:'G Major',
+   chordName:'C Major',chordNotes:'C – E – G',
+   q:'מה האקורד על דרגה <span class="ltr">IV</span> בסולם <span class="ltr">G Major</span>?',
+   opts:['C Major','F Major','Am','Dm'],ans:0,
+   chord:[60,64,67],
+   staffNotes:[{letter:'C',acc:'',octaveAdj:0},{letter:'E',acc:'',octaveAdj:0},{letter:'G',acc:'',octaveAdj:0}],
+   scale:'G – A – B – C – D – E – F♯'},
+  {badge:'חלק א׳ — זיהוי דרגות',qLabel:'שאלה 3',degreeName:'VII°',keyName:'D Major',
+   chordName:'C♯dim',chordNotes:'C♯ – E – G',
+   q:'מה האקורד על דרגה <span class="ltr">VII°</span> בסולם <span class="ltr">D Major</span>?',
+   opts:['C♯dim','Cdim','D♯dim','Bdim'],ans:0,
+   chord:[61,64,67],
+   staffNotes:[{letter:'C',acc:'#',octaveAdj:0},{letter:'E',acc:'',octaveAdj:0},{letter:'G',acc:'',octaveAdj:0}],
+   scale:'D – E – F♯ – G – A – B – C♯'},
+  {badge:'חלק א׳ — זיהוי דרגות',qLabel:'שאלה 4',degreeName:'II',keyName:'F Major',
+   chordName:'Gm',chordNotes:'G – B♭ – D',
+   q:'מה האקורד על דרגה <span class="ltr">II</span> בסולם <span class="ltr">F Major</span>?',
+   opts:['Gm','G Major','Am','Dm'],ans:0,
+   chord:[67,70,74],
+   staffNotes:[{letter:'G',acc:'',octaveAdj:0},{letter:'B',acc:'b',octaveAdj:0},{letter:'D',acc:'',octaveAdj:1}],
+   scale:'F – G – A – B♭ – C – D – E'},
+  {badge:'חלק א׳ — זיהוי דרגות',qLabel:'שאלה 5',degreeName:'V⁷',keyName:'C Major',
+   chordName:'G7',chordNotes:'G – B – D – F',
+   q:'מה אקורד <span class="ltr">V⁷</span> בסולם <span class="ltr">C Major</span>?',
+   opts:['G7','F7','D7','E7'],ans:0,
+   chord:[67,71,74,77],
+   staffNotes:[{letter:'G',acc:'',octaveAdj:0},{letter:'B',acc:'',octaveAdj:0},{letter:'D',acc:'',octaveAdj:1},{letter:'F',acc:'',octaveAdj:1}],
+   scale:'C – D – E – F – G – A – B'},
+  {badge:'חלק א׳ — זיהוי דרגות',qLabel:'שאלה 6',degreeName:'VI',keyName:'A Major',
+   chordName:'F♯m',chordNotes:'F♯ – A – C♯',
+   q:'מה האקורד על דרגה <span class="ltr">VI</span> בסולם <span class="ltr">A Major</span>?',
+   opts:['F♯m','Fm','Dm','Bm'],ans:0,
+   chord:[66,69,73],
+   staffNotes:[{letter:'F',acc:'#',octaveAdj:0},{letter:'A',acc:'',octaveAdj:0},{letter:'C',acc:'#',octaveAdj:1}],
+   scale:'A – B – C♯ – D – E – F♯ – G♯'},
+  {badge:'חלק א׳ — זיהוי דרגות',qLabel:'שאלה 7',degreeName:'IV',keyName:'B♭ Major',
+   chordName:'E♭ Major',chordNotes:'E♭ – G – B♭',
+   q:'מה האקורד על דרגה <span class="ltr">IV</span> בסולם <span class="ltr">B♭ Major</span>?',
+   opts:['E♭ Major','E Major','A♭ Major','B♭ Major'],ans:0,
+   chord:[63,67,70],
+   staffNotes:[{letter:'E',acc:'b',octaveAdj:0},{letter:'G',acc:'',octaveAdj:0},{letter:'B',acc:'b',octaveAdj:0}],
+   scale:'B♭ – C – D – E♭ – F – G – A'},
+  {badge:'חלק א׳ — זיהוי דרגות',qLabel:'שאלה 8',degreeName:'III',keyName:'C Major',
+   chordName:'Em',chordNotes:'E – G – B',
+   q:'מה האקורד על דרגה <span class="ltr">III</span> בסולם <span class="ltr">C Major</span>?',
+   opts:['Em','E Major','Fm','Am'],ans:0,
+   chord:[64,67,71],
+   staffNotes:[{letter:'E',acc:'',octaveAdj:0},{letter:'G',acc:'',octaveAdj:0},{letter:'B',acc:'',octaveAdj:0}],
+   scale:'C – D – E – F – G – A – B'},
+  {badge:'חלק א׳ — זיהוי דרגות',qLabel:'שאלה 9',degreeName:'V',keyName:'A♭ Major',
+   chordName:'E♭ Major',chordNotes:'E♭ – G – B♭',
+   q:'מה האקורד על דרגה <span class="ltr">V</span> בסולם <span class="ltr">A♭ Major</span>?',
+   opts:['E♭ Major','E Major','B♭ Major','D♭ Major'],ans:0,
+   chord:[63,67,70],
+   staffNotes:[{letter:'E',acc:'b',octaveAdj:0},{letter:'G',acc:'',octaveAdj:0},{letter:'B',acc:'b',octaveAdj:0}],
+   scale:'A♭ – B♭ – C – D♭ – E♭ – F – G'},
+  {badge:'חלק א׳ — זיהוי דרגות',qLabel:'שאלה 10',degreeName:'II°',keyName:'A Natural Minor',
+   chordName:'Bdim',chordNotes:'B – D – F',
+   q:'מה האקורד על דרגה <span class="ltr">II°</span> בסולם <span class="ltr">A Natural Minor</span>?',
+   opts:['Bdim','Bm','B Major','Edim'],ans:0,
+   chord:[71,74,77],
+   staffNotes:[{letter:'B',acc:'',octaveAdj:0},{letter:'D',acc:'',octaveAdj:1},{letter:'F',acc:'',octaveAdj:1}],
+   scale:'A – B – C – D – E – F – G'}
+];
+
+const P2_POOL=[
+  {badge:'חלק ב׳ — כתיבת אקורדים',
+   title:'כתבו דרגה <span class="ltr">V</span> בסולם <span class="ltr">E Major</span> — מצב יסודי',
+   invBox:'מצב יסודי: השורש <b>B</b> חייב להיות הצליל הנמוך ביותר.',
+   scaleHint:'E Major: E – F♯ – G♯ – A – B – C♯ – D♯ → V = B Major',
+   exp:['B','D#','F#'],bass:'B',name:'B Major',inv:0,expl:'B–D♯–F♯.'},
+  {badge:'חלק ב׳ — כתיבת אקורדים',
+   title:'כתבו דרגה <span class="ltr">IV</span> בסולם <span class="ltr">G Major</span> — מצב יסודי',
+   invBox:'מצב יסודי: השורש <b>C</b> חייב להיות הצליל הנמוך ביותר.',
+   scaleHint:'G Major: G – A – B – C – D – E – F♯ → IV = C Major',
+   exp:['C','E','G'],bass:'C',name:'C Major',inv:0,expl:'C–E–G.'},
+  {badge:'חלק ב׳ — כתיבת אקורדים',
+   title:'כתבו דרגה <span class="ltr">III⁶</span> בסולם <span class="ltr">A Major</span> — סקסטאקורד',
+   invBox:'סקסטאקורד: הטרצה <b>E</b> חייבת להיות הצליל הנמוך ביותר (לא השורש C♯).',
+   scaleHint:'A Major: A – B – C♯ – D – E – F♯ – G♯ → III = C♯m',
+   exp:['C#','E','G#'],bass:'E',name:'C♯m/E (III⁶)',inv:1,expl:'C♯–E–G♯, E בבסיס.'},
+  {badge:'חלק ב׳ — כתיבת אקורדים',
+   title:'כתבו דרגה <span class="ltr">I⁶/₄</span> בסולם <span class="ltr">C Major</span> — קוורטסקסט',
+   invBox:'קוורטסקסט: הקווינטה <b>G</b> חייבת להיות הצליל הנמוך ביותר.',
+   scaleHint:'C Major: C – D – E – F – G – A – B → I = C Major',
+   exp:['C','E','G'],bass:'G',name:'C/G (I⁶/₄)',inv:2,expl:'C–E–G, G בבסיס.'},
+  {badge:'חלק ב׳ — כתיבת אקורדים',
+   title:'כתבו <span class="ltr">V⁷</span> בסולם <span class="ltr">D Major</span> — מצב יסודי',
+   invBox:'מצב יסודי: השורש <b>A</b> חייב להיות הנמוך ביותר.',
+   scaleHint:'D Major: D – E – F♯ – G – A – B – C♯ → V7 = A7',
+   exp:['A','C#','E','G'],bass:'A',name:'A7',inv:0,expl:'A–C♯–E–G.'},
+  {badge:'חלק ב׳ — כתיבת אקורדים',
+   title:'כתבו <span class="ltr">V⁶₅</span> בסולם <span class="ltr">G Major</span> — קווינטסקסט',
+   invBox:'קווינטסקסט: הטרצה <b>F♯</b> חייבת להיות הנמוך ביותר.',
+   scaleHint:'G Major: G – A – B – C – D – E – F♯ → V7 = D7',
+   exp:['D','F#','A','C'],bass:'F#',name:'D7/F♯ (V⁶₅)',inv:1,expl:'D–F♯–A–C, F♯ בבסיס.'},
+  {badge:'חלק ב׳ — כתיבת אקורדים',
+   title:'כתבו <span class="ltr">V⁴₃</span> בסולם <span class="ltr">F Major</span> — טרצקוורט',
+   invBox:'טרצקוורט: הקווינטה <b>G</b> חייבת להיות הנמוך ביותר.',
+   scaleHint:'F Major: F – G – A – B♭ – C – D – E → V7 = C7',
+   exp:['C','E','G','Bb'],bass:'G',name:'C7/G (V⁴₃)',inv:2,expl:'C–E–G–B♭, G בבסיס.'},
+  {badge:'חלק ב׳ — כתיבת אקורדים',
+   title:'כתבו <span class="ltr">V²</span> בסולם <span class="ltr">B♭ Major</span> — סקונדה קורד',
+   invBox:'סקונדה קורד: השביעית <b>E♭</b> חייבת להיות הנמוך ביותר.',
+   scaleHint:'B♭ Major: B♭ – C – D – E♭ – F – G – A → V7 = F7',
+   exp:['F','A','C','Eb'],bass:'Eb',name:'F7/E♭ (V²)',inv:3,expl:'F–A–C–E♭, E♭ בבסיס.'},
+  {badge:'חלק ב׳ — כתיבת אקורדים',
+   title:'כתבו דרגה <span class="ltr">VII°</span> בסולם <span class="ltr">G Major</span> — מצב יסודי',
+   invBox:'מצב יסודי: השורש <b>F♯</b> חייב להיות הנמוך ביותר.',
+   scaleHint:'G Major: G – A – B – C – D – E – F♯ → VII° = F♯dim',
+   exp:['F#','A','C'],bass:'F#',name:'F♯dim',inv:0,expl:'F♯–A–C.'},
+  {badge:'חלק ב׳ — כתיבת אקורדים',
+   title:'כתבו דרגה <span class="ltr">II⁶</span> בסולם <span class="ltr">A Major</span> — סקסטאקורד',
+   invBox:'סקסטאקורד: הטרצה <b>D</b> חייבת להיות הנמוך ביותר.',
+   scaleHint:'A Major: A – B – C♯ – D – E – F♯ – G♯ → II = Bm',
+   exp:['B','D','F#'],bass:'D',name:'Bm/D (II⁶)',inv:1,expl:'B–D–F♯, D בבסיס.'}
+];
+const P2_VARS=[[0,1,2,3,4,5,6],[0,2,3,5,6,7,8],[1,3,4,6,7,8,9]];
+
+const P4A=[
+  {badge:'חלק ד׳ א — ניתוח הרמוני',qLabel:'שאלה 19',
+   q:'הרצף <span class="ltr">Dm – G7 – C</span> בסולם <span class="ltr">C Major</span> — מהו הניתוח הנכון?',
+   opts:['<span class="ltr">ii – V⁷ – I</span> (קדנצה אותנטית עם סופר-טוניקה)',
+         '<span class="ltr">IV – V⁷ – I</span> (קדנצה אותנטית מושלמת)',
+         '<span class="ltr">vi – V⁷ – I</span> (תנועה מדיאנטית)',
+         '<span class="ltr">ii⁶ – V⁷ – I</span> (היפוך ראשון)'],
+   ans:0,expl:'Dm=ii, G⁷=V⁷, C=I. רצף ii–V–I קלאסי.',
+   prog:[[62,65,69],[67,71,74,77],[60,64,67]]},
+  {badge:'חלק ד׳ א — ניתוח הרמוני',qLabel:'שאלה 20',
+   q:'הרצף <span class="ltr">C – F – A♭ – G</span> בסולם <span class="ltr">C Major</span> — <span class="ltr">A♭</span> הוא אקורד שאול. מאיזה סולם?',
+   opts:['שאול מסולם <span class="ltr">C</span> מינור טבעי — דרגה <span class="ltr">♭VI</span>',
+         'שאול מסולם <span class="ltr">G</span> מינור — דרגה <span class="ltr">♭II</span>',
+         'אינו שאול — קיים ב-<span class="ltr">C Major</span>',
+         'שאול מסולם <span class="ltr">F Major</span>'],
+   ans:0,expl:'A♭ = ♭VI שאול מ-C מינור טבעי.',
+   prog:[[60,64,67],[65,69,72],[68,72,75],[67,71,74]]},
+  {badge:'חלק ד׳ א — ניתוח הרמוני',qLabel:'שאלה 21',
+   q:'מהלך שמסתיים על דרגה <span class="ltr">V</span> ואינו פותר ל-<span class="ltr">I</span> — כיצד נקרא?',
+   opts:['קדנצה חצי (Half Cadence)','קדנצה אותנטית (Authentic Cadence)',
+         'קדנצה פלגלית (Plagal Cadence)','קדנצה מדומה (Deceptive Cadence)'],
+   ans:0,expl:'קדנצה חצי — מסתיימת על V ללא פתרון לטוניקה.',
+   prog:[[60,64,67],[67,71,74]]},
+  {badge:'חלק ד׳ א — ניתוח הרמוני',qLabel:'שאלה 22',
+   q:'הרצף <span class="ltr">G – Am</span> בסולם <span class="ltr">C Major</span> — מהי הקדנצה?',
+   opts:['קדנצה מדומה (Deceptive Cadence)','קדנצה אותנטית (Authentic Cadence)',
+         'קדנצה פלגלית (Plagal Cadence)','קדנצה חצי (Half Cadence)'],
+   ans:0,expl:'V → vi במקום V → I = קדנצה מדומה.',
+   prog:[[67,71,74],[69,72,76]]}
+];
+
+const P4B=[
+  {badge:'חלק ד׳ ב — קדנצות',qLabel:'שאלה 23',
+   q:'המהלך <span class="ltr">V → I</span> — כיצד נקראת הקדנצה?',
+   opts:['קדנצה אותנטית','קדנצה פלגלית','קדנצה חצי','קדנצה מדומה'],
+   ans:0,expl:'V → I = קדנצה אותנטית.',prog:[[67,71,74],[60,64,67]]},
+  {badge:'חלק ד׳ ב — קדנצות',qLabel:'שאלה 24',
+   q:'המהלך <span class="ltr">IV → I</span> — כיצד נקראת הקדנצה?',
+   opts:['קדנצה פלגלית','קדנצה אותנטית','קדנצה חצי','קדנצה מדומה'],
+   ans:0,expl:'IV → I = קדנצה פלגלית.',prog:[[65,69,72],[60,64,67]]},
+  {badge:'חלק ד׳ ב — קדנצות',qLabel:'שאלה 25',
+   q:'מהלך שמסתיים על <span class="ltr">V</span> ויוצר תחושה של השהייה:',
+   opts:['קדנצה חצי','קדנצה אותנטית','קדנצה פלגלית','קדנצה מדומה'],
+   ans:0,expl:'קדנצה חצי — מסתיימת על V.',prog:[[60,64,67],[67,71,74]]},
+  // V6/5 → I  (G7/B → C in C Major — 1st inversion: 3rd in bass)
+  {badge:'חלק ד׳ ב — קדנצות',qLabel:'שאלה 26',
+   q:'<span class="ltr">V⁶₅</span> הוא ספטאקורד הדומיננטה בהיפוך ראשון. מה נמצא בבסיס?',
+   opts:['הטרצה (הדרגה ה-3 של האקורד)','השורש (הדרגה ה-1)','הקווינטה (הדרגה ה-5)','השביעית (הדרגה ה-7)'],
+   ans:0,
+   expl:'V⁶₅: היפוך ראשון — הטרצה בבסיס. לדוגמה: G7/B בסולם C → B–D–F–G, פותר ל-C מג׳ור.',
+   prog:[[59,62,65,67],[60,64,67,72]]},  // G7/B(B3,D4,F4,G4) → C(C4,E4,G4,C5)
+  // V4/3 → I  (G7/D → C in C Major — 2nd inversion: 5th in bass)
+  {badge:'חלק ד׳ ב — קדנצות',qLabel:'שאלה 27',
+   q:'<span class="ltr">V⁴₃</span> הוא ספטאקורד הדומיננטה בהיפוך שני. מה נמצא בבסיס, ולאן הוא פותר?',
+   opts:['הקווינטה בבסיס — פותר ל-<span class="ltr">I</span> (מצב יסודי)',
+         'השורש בבסיס — פותר ל-<span class="ltr">I</span>',
+         'הטרצה בבסיס — פותר ל-<span class="ltr">I⁶</span>',
+         'השביעית בבסיס — פותר ל-<span class="ltr">I⁶</span>'],
+   ans:0,
+   expl:'V⁴₃: היפוך שני — הקווינטה בבסיס. G7/D בסולם C → D–F–G–B, פותר ל-C מג׳ור (מצב יסודי).',
+   prog:[[62,65,67,71],[60,64,67,72]]},  // G7/D(D4,F4,G4,B4) → C(C4,E4,G4,C5)
+  // V2 — 3rd inversion: 7th in bass
+  {badge:'חלק ד׳ ב — קדנצות',qLabel:'שאלה 28',
+   q:'<span class="ltr">V²</span> הוא ספטאקורד הדומיננטה בהיפוך השלישי. מה נמצא בבסיס, ולאן הוא פותר?',
+   opts:['השביעית בבסיס — פותר ל-<span class="ltr">I⁶</span> (הטרצה של I בבסיס)',
+         'הטרצה בבסיס — פותר ל-<span class="ltr">I</span>',
+         'הקווינטה בבסיס — פותר ל-<span class="ltr">I</span>',
+         'השורש בבסיס — פותר ל-<span class="ltr">I</span>'],
+   ans:0,
+   expl:'V²: היפוך שלישי — השביעית (F) בבסיס. G7/F בסולם C → F–G–B–D, פותר ל-C/E (I⁶ — הטרצה E בבסיס).',
+   prog:[[53,55,59,62],[52,55,60,64]]},  // G7/F(F3,G3,B3,D4) → C/E(E3,G3,C4,E4)
+  // Septima resolution (scale degree 4 → 3)
+  {badge:'חלק ד׳ ב — קדנצות',qLabel:'שאלה 29',
+   q:'בספטאקורד הדומיננטי (<span class="ltr">V⁷</span>) — לאיזה כיוון רוצה להיפתר ה<b>ספטימה</b> (דרגה <span class="ltr">4</span> בסולם)?',
+   opts:['כלפי מטה — לטרצה של <span class="ltr">I</span> (דרגה <span class="ltr">3</span> בסולם)',
+         'כלפי מעלה — לטוניקה (דרגה <span class="ltr">1</span>)',
+         'כלפי מטה — לדרגה <span class="ltr">2</span> בסולם',
+         'נשארת על אותו הצליל (תנועה אפסית)'],
+   ans:0,
+   expl:'הספטימה (F בסולם C) — דרגה 4 — רוצה לרדת למטה לדרגה 3 (E), הטרצה של אקורד I. זו תנועת סקונדה מוסיקלית טבעית.',
+   prog:[[67,65],[60,64]]},  // G→F resolving down: F4→E4 over C chord
+  // Leading tone resolution (scale degree 7 → 8)
+  {badge:'חלק ד׳ ב — קדנצות',qLabel:'שאלה 30',
+   q:'בספטאקורד הדומיננטי (<span class="ltr">V⁷</span>) — לאיזה כיוון רוצה להיפתר <b>הטרצה</b> (דרגה <span class="ltr">7</span> בסולם — צליל המוביל)?',
+   opts:['כלפי מעלה — לטוניקה של <span class="ltr">I</span> (דרגה <span class="ltr">8/1</span> בסולם)',
+         'כלפי מטה — לדרגה <span class="ltr">6</span> בסולם',
+         'כלפי מעלה — לדרגה <span class="ltr">2</span> בסולם',
+         'נשארת על אותו הצליל (תנועה אפסית)'],
+   ans:0,
+   expl:'הטרצה של V⁷ (B בסולם C) היא דרגה 7 — "צליל מוביל" (Leading Tone) — רוצה לעלות למעלה לטוניקה (C), דרגה 8/1. תנועת חצי-טון טבעית.',
+   prog:[[65,71],[64,72]]}  // F4+B4 (septima+leading tone) → E4+C5 (resolve inward)
+];
+
+const TBL_ROWS=[
+  {hint:'D⁷',hintSub:'נתון (V⁷)',hintCol:5,ans:'G Major: G – Am – Bm – C – D – D⁷ – Em – F♯°'},
+  {hint:'B',hintSub:'נתון (IV=BM)',hintCol:3,ans:'F♯ Major: F♯ – G♯m – A♯m – B – C♯ – C♯⁷ – D♯m – E♯°'},
+  {hint:'F♯°',hintSub:'נתון (VII°)',hintCol:7,ans:'G Major: G – Am – Bm – C – D – D⁷ – Em – F♯°'}
+];
+
+// ── STATE ──────────────────────────────────────────────────────────────────
+let curVar=0,cur=0,score=0,tblRow=0;
+let P1=[],P2=[];
+let results,given,flagged,mcAtt;
+const TOTAL=30;
+
+function initVariant(v){
+  curVar=v%3;
+  P1=P1_BASE.map(q=>{
+    const idxs=[0,1,2,3];
+    for(let i=3;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idxs[i],idxs[j]]=[idxs[j],idxs[i]];}
+    const correct=q.opts[q.ans];const no=idxs.map(i=>q.opts[i]);
+    return {...q,opts:no,ans:no.indexOf(correct)};
+  });
+  P2=P2_VARS[curVar].map((idx,i)=>({...P2_POOL[idx],qLabel:'שאלה '+(11+i)}));
+  tblRow=v%3;
+  results=new Array(TOTAL).fill(null);
+  given=new Array(TOTAL).fill(null);
+  flagged=new Set();
+  mcAtt=new Array(TOTAL).fill(0);
+  score=0;
+}
+
+function getPage(i){
+  if(i<10) return {type:'p1',data:P1[i]};
+  if(i<17) return {type:'write',data:P2[i-10],writeIdx:i-10};
+  if(i===17) return {type:'table'};
+  if(i<22) return {type:'p4a',data:P4A[i-18]};
+  return {type:'p4b',data:P4B[i-22]};
+}
+const MAX_SCORE=()=>29; // 10+7+4+8
+
+function updScore(){
+  const pct=Math.min(100,Math.round(score/MAX_SCORE()*100));
+  const f=document.getElementById('ls-fill'),l=document.getElementById('ls-pct');
+  if(l)l.textContent=pct+'%';
+  if(f){f.style.width=pct+'%';f.style.background=pct>=90?'linear-gradient(90deg,#f59e0b,#f97316)':pct>=70?'linear-gradient(90deg,#22c55e,#16a34a)':'linear-gradient(90deg,#3b82f6,#1d4ed8)';}
+}
+function rec(res,giv){
+  const old=results[cur];results[cur]=res;given[cur]={giv,isOk:res==='ok',isP:res==='partial'};
+  if(!old){if(res==='ok')score+=1;else if(res==='partial')score+=0.5;}
+  updateNav();updScore();
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────
+function render(pg){
+  if(pg!==undefined)cur=pg;
+  stopAll(); // stop any playing audio on navigation
+  if(cur>=TOTAL){renderScore();return;}
+  document.body.className='pal-'+(cur%9);
+  document.getElementById('q-ctr').textContent=`שאלה ${cur+1} / ${TOTAL}`;
+  document.getElementById('prog-fill').style.width=`${(cur/TOTAL)*100}%`;
+  const main=document.getElementById('main');main.innerHTML='';
+  const pg2=getPage(cur);
+  if(pg2.type==='p1') renderP1(main,pg2.data);
+  else if(pg2.type==='write') renderWrite(main,pg2.data,pg2.writeIdx);
+  else if(pg2.type==='table') renderTable(main);
+  else renderMC4(main,pg2.data);
+  updateNav();main.scrollTop=0;
+}
+
+// ── PART 1 ────────────────────────────────────────────────────────────────
+function renderP1(main,data){
+  const bdg=mkEl('div','badge');bdg.innerHTML='🎯 '+data.badge;main.appendChild(bdg);
+  const card=mkEl('div','card');addFlag(card);
+  const ql=mkEl('div','');ql.style.cssText='font-size:.69rem;font-weight:700;color:var(--gray);margin-bottom:7px';ql.textContent=data.qLabel;card.appendChild(ql);
+  const qt=mkEl('div','');qt.style.cssText='font-size:.93rem;font-weight:700;line-height:1.75;margin-bottom:3px';qt.innerHTML=data.q;card.appendChild(qt);
+  const useList=data.opts.some(o=>o.length>14);
+  const grid=mkEl('div',useList?'mc-list':'mc-grid');grid.id='mc-grid';
+  if(results[cur]!==null){
+    data.opts.forEach((opt,i)=>{const b=mkEl('button','mc-btn');b.innerHTML=opt;b.disabled=true;if(i===data.ans)b.classList.add('correct');else if(given[cur]?.giv===opt&&results[cur]==='err')b.classList.add('wrong');grid.appendChild(b);});
+    card.appendChild(grid);
+    const fbb=buildP1Feedback(data,results[cur]==='ok',false);card.appendChild(fbb);
+  } else {
+    data.opts.forEach((opt,i)=>{const b=mkEl('button','mc-btn');b.innerHTML=opt;b.onclick=()=>checkP1(b,i,opt,data,grid);grid.appendChild(b);});
+    card.appendChild(grid);
+    const fb=mkEl('div','fb');fb.id='fb';card.appendChild(fb);
+  }
+  const nb=mkNextBtn();card.appendChild(nb);if(results[cur]!==null)nb.classList.add('show');
+  main.appendChild(card);
+}
+
+function buildP1Feedback(data,isOk,autoPlay){
+  const wrap=mkEl('div','');
+  wrap.style.cssText='margin-top:10px;border-radius:9px;border:2px solid '+(isOk?'#86efac':'#fca5a5')+';overflow:hidden';
+  const hdr=mkEl('div','');
+  hdr.style.cssText='padding:8px 12px;background:'+(isOk?'#dcfce7':'#fee2e2')+';color:'+(isOk?'#166534':'#991b1b')+';font-size:.85rem;font-weight:700';
+  hdr.textContent=isOk?'✓ נכון!':'✗ לא נכון — התשובה הנכונה:';
+  wrap.appendChild(hdr);
+  const tbl=document.createElement('table');tbl.className='fb-tbl';
+  function addRow(lbl,valHTML,cls){const tr=document.createElement('tr');const td1=document.createElement('td');td1.className='lbl';td1.textContent=lbl;const td2=document.createElement('td');td2.className=cls||'val';td2.innerHTML=valHTML;tr.appendChild(td1);tr.appendChild(td2);tbl.appendChild(tr);}
+  addRow('אקורד','<b>'+data.chordName+'</b>','val');
+  addRow('צלילים',data.chordNotes,'val');
+  addRow('דרגה','<b>'+data.degreeName+'</b> בסולם <span style="font-family:\'Times New Roman\',serif">'+data.keyName+'</span>','val-rtl');
+  addRow('סולם','<span class="fb-scale">'+data.scale+'</span>','val-rtl');
+  // Staff row
+  const staffTr=document.createElement('tr');
+  const staffTd=document.createElement('td');staffTd.colSpan=2;staffTd.style.cssText='padding:4px 9px;background:#f8fafc';
+  const staffOut=mkEl('div','staff-outer');staffOut.style.maxWidth='420px';
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('class','staff-svg'); // SVG elements: use setAttribute
+  staffOut.appendChild(svg);staffTd.appendChild(staffOut);staffTr.appendChild(staffTd);tbl.appendChild(staffTr);
+  wrap.appendChild(tbl);
+  // Play button
+  const pa=mkEl('div','');pa.style.cssText='padding:6px 12px;background:#f0f9ff;text-align:center;border-top:1px solid rgba(0,0,0,.06)';
+  const pb=mkEl('button','pre-play-btn');pb.textContent='▶ נגן אקורד';
+  pb.onclick=()=>{pb.classList.add('playing');pb.textContent='⏹ מנגן...';playHarmChord(data.chord,()=>{pb.classList.remove('playing');pb.textContent='▶ נגן אקורד';});};
+  pa.appendChild(pb);wrap.appendChild(pa);
+  // Draw staff after DOM insertion
+  setTimeout(()=>drawStaff(svg,data.staffNotes),20);
+  if(autoPlay!==false) setTimeout(()=>playHarmChord(data.chord,null),300);
+  return wrap;
+}
+
+function checkP1(btn,idx,opt,data,grid){
+  if(mcAtt[cur]>=2)return;
+  const isOk=idx===data.ans;
+  if(isOk){
+    grid.querySelectorAll('.mc-btn').forEach((b,i)=>{b.disabled=true;if(i===data.ans)b.classList.add('correct');});
+    rec('ok',opt);
+    const fb=document.getElementById('fb');if(fb)fb.replaceWith(buildP1Feedback(data,true,true));
+    document.getElementById('nb')?.classList.add('show');
+  } else {
+    mcAtt[cur]++;btn.classList.add('wrong');
+    if(mcAtt[cur]<2){
+      setTimeout(()=>btn.classList.remove('wrong'),700);
+      const fb=document.getElementById('fb');if(fb){fb.className='fb info';fb.textContent='✗ לא נכון — נסו שנית!';}
+    } else {
+      grid.querySelectorAll('.mc-btn').forEach((b,i)=>{b.disabled=true;if(i===data.ans)b.classList.add('correct');});
+      rec('err',opt);
+      const fb=document.getElementById('fb');if(fb)fb.replaceWith(buildP1Feedback(data,false,true));
+      document.getElementById('nb')?.classList.add('show');
+    }
+  }
+}
+
+// ── PART 4 MC ──────────────────────────────────────────────────────────────
+function renderMC4(main,data){
+  const bdg=mkEl('div','badge');bdg.innerHTML='🎯 '+data.badge;main.appendChild(bdg);
+  const card=mkEl('div','card');addFlag(card);
+  const ql=mkEl('div','');ql.style.cssText='font-size:.69rem;font-weight:700;color:var(--gray);margin-bottom:7px';ql.textContent=data.qLabel;card.appendChild(ql);
+  const qt=mkEl('div','');qt.style.cssText='font-size:.93rem;font-weight:700;line-height:1.75;margin-bottom:3px';qt.innerHTML=data.q;card.appendChild(qt);
+  // Pre-play button
+  if(data.prog&&data.prog.length){
+    const ppb=mkEl('button','pre-play-btn');ppb.id='pre-play';
+    ppb.innerHTML=data.prog.length>1?'▶ נגן מהלך':'▶ נגן אקורד';
+    ppb.onclick=()=>{
+      ppb.classList.add('playing');ppb.innerHTML='⏹ מנגן...';
+      playHarmProg(data.prog,()=>{ppb.classList.remove('playing');ppb.innerHTML=data.prog.length>1?'▶ נגן מהלך':'▶ נגן אקורד';});
+    };
+    card.appendChild(ppb);
+  }
+  const useList=data.opts.some(o=>o.replace(/<[^>]+>/g,'').length>18);
+  const grid=mkEl('div',useList?'mc-list':'mc-grid');grid.id='mc-grid';
+  if(results[cur]!==null){
+    data.opts.forEach((opt,i)=>{const b=mkEl('button','mc-btn');b.innerHTML=opt;b.disabled=true;if(i===data.ans)b.classList.add('correct');else if(given[cur]?.giv===opt&&results[cur]==='err')b.classList.add('wrong');grid.appendChild(b);});
+    card.appendChild(grid);
+    const fb=mkEl('div','fb '+(results[cur]==='ok'?'ok':'err'));
+    fb.innerHTML=(results[cur]==='ok'?'✓ נכון! ':'✗ התשובה הנכונה: <b>'+data.opts[data.ans].replace(/<[^>]+>/g,'')+'</b>. ')+data.expl;
+    card.appendChild(fb);
+  } else {
+    data.opts.forEach((opt,i)=>{const b=mkEl('button','mc-btn');b.innerHTML=opt;b.onclick=()=>checkMC4(b,i,opt,data,grid);grid.appendChild(b);});
+    card.appendChild(grid);
+    const fb=mkEl('div','fb');fb.id='fb';card.appendChild(fb);
+  }
+  const nb=mkNextBtn();card.appendChild(nb);if(results[cur]!==null)nb.classList.add('show');
+  main.appendChild(card);
+}
+
+function checkMC4(btn,idx,opt,data,grid){
+  if(mcAtt[cur]>=2)return;
+  const isOk=idx===data.ans;
+  if(isOk){
+    grid.querySelectorAll('.mc-btn').forEach((b,i)=>{b.disabled=true;if(i===data.ans)b.classList.add('correct');});
+    rec('ok',opt);
+    const fb=document.getElementById('fb');fb.className='fb ok';fb.innerHTML='✓ נכון! '+data.expl;
+    if(data.prog) playHarmProg(data.prog,null);
+    document.getElementById('nb')?.classList.add('show');
+  } else {
+    mcAtt[cur]++;btn.classList.add('wrong');
+    if(mcAtt[cur]<2){
+      setTimeout(()=>btn.classList.remove('wrong'),700);
+      const fb=document.getElementById('fb');fb.className='fb info';fb.textContent='✗ לא נכון — נסו שנית!';
+    } else {
+      grid.querySelectorAll('.mc-btn').forEach((b,i)=>{b.disabled=true;if(i===data.ans)b.classList.add('correct');});
+      rec('err',opt);
+      const fb=document.getElementById('fb');fb.className='fb err';
+      fb.innerHTML='✗ התשובה הנכונה: <b>'+data.opts[data.ans].replace(/<[^>]+>/g,'')+'</b>. '+data.expl;
+      if(data.prog) playHarmProg(data.prog,null);
+      document.getElementById('nb')?.classList.add('show');
+    }
+  }
+}
+
+// ── WRITE ─────────────────────────────────────────────────────────────────
+function renderWrite(main,data,writeIdx){
+  const sid='wr'+cur; // page-index based — unique per question
+  const bdg=mkEl('div','badge');bdg.innerHTML='📝 '+data.badge;main.appendChild(bdg);
+  const card=mkEl('div','card');addFlag(card);
+  const ql=mkEl('div','');ql.style.cssText='font-size:.69rem;font-weight:700;color:var(--gray);margin-bottom:5px';ql.textContent=data.qLabel;card.appendChild(ql);
+  const ttl=mkEl('div','write-title');ttl.innerHTML=data.title;card.appendChild(ttl);
+  if(writeIdx===0){
+    const inv=mkEl('div','inv-hint');inv.innerHTML='🎼 <b>תזכורת היפוך:</b> '+data.invBox;card.appendChild(inv);
+    const sh=mkEl('div','scale-hint');sh.textContent='🔑 '+data.scaleHint;card.appendChild(sh);
+  }
+  const aa=mkEl('div','ans-area');
+  const al=mkEl('div','ans-lbl');al.textContent='📝 הזינו צלילים — סימן ואז צליל';aa.appendChild(al);
+  buildNI(sid,aa);
+  const so=mkEl('div','staff-outer');
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('class','staff-svg'); // use setAttribute for SVG
+  svg.id='staff-'+sid;
+  so.appendChild(svg);aa.appendChild(so);
+  card.appendChild(aa);
+  const pb=mkEl('button','play-write-btn');pb.id='pwb-'+sid;pb.textContent='▶ נגן';
+  pb.onclick=()=>playWriteStaff(sid,pb);card.appendChild(pb);
+  if(results[cur]!==null){
+    const inf=mkEl('div','');inf.style.cssText='margin-top:8px;padding:8px 12px;background:var(--accl);border-radius:7px;font-size:.8rem';
+    inf.innerHTML='<b>הוגש.</b> '+(results[cur]==='ok'?'✓ נכון מלא':results[cur]==='partial'?'½ חלקי':'✗ לא נכון')+' — '+(given[cur]?.giv||'');
+    card.appendChild(inf);
+  } else {
+    const cr=mkEl('div','chk-row');
+    const cb=mkEl('button','chk-btn');cb.id='chk';cb.textContent='בדקו תשובה';cb.onclick=()=>checkWrite(sid,data,cb);cr.appendChild(cb);
+    const fb=mkEl('div','fb');fb.id='fb';cr.appendChild(fb);card.appendChild(cr);
+  }
+  const nb=mkNextBtn();card.appendChild(nb);if(results[cur]!==null)nb.classList.add('show');
+  main.appendChild(card);
+  // Draw empty staff after DOM insertion
+  requestAnimationFrame(()=>drawStaff(svg,[]));
+}
+
+function playWriteStaff(sid,btnEl){
+  const notes=NS[sid]||[];if(!notes.length)return;
+  stopAll();
+  document.querySelectorAll('.play-write-btn.playing').forEach(b=>{b.classList.remove('playing');b.textContent='▶ נגן';});
+  const myId=++activePlayId;const ctx=getCtx();
+  const sorted=[...notes].filter(n=>MIDI_LET[n.letter]!==undefined)
+    .sort((a,b)=>noteToMidiSimple(a.letter,a.acc,a.octaveAdj)-noteToMidiSimple(b.letter,b.acc,b.octaveAdj));
+  const midis=sorted.map(n=>noteToMidiSimple(n.letter,n.acc,n.octaveAdj));
+  if(btnEl){btnEl.classList.add('playing');btnEl.textContent='⏹ מנגן...';}
+  playArpChord(midis,()=>{if(btnEl){btnEl.classList.remove('playing');btnEl.textContent='▶ נגן';}});
+}
+
+function checkWrite(sid,data,chkBtn){
+  const notes=NS[sid]||[];const fb=document.getElementById('fb');
+  if(notes.length<data.exp.length){fb.className='fb info';fb.textContent=`הזנתם ${notes.length} צלילים — נדרשים ${data.exp.length}.`;return;}
+  const sorted=[...notes].sort((a,b)=>staffPos(b.letter,b.octaveAdj)-staffPos(a.letter,a.octaveAdj));
+  const placed=sorted.map(n=>n.letter+(n.acc||''));
+  const missing=data.exp.filter(e=>!placed.some(p=>noteEq(p,e)));
+  mcAtt[cur]=(mcAtt[cur]||0)+1;
+  if(missing.length>0){
+    fb.className='fb err';fb.innerHTML='✗ שמות הצלילים לא נכונים. '+data.expl;
+    if(mcAtt[cur]>=2){chkBtn.disabled=true;rec('err',placed.join(', '));document.getElementById('nb')?.classList.add('show');}
+    else fb.innerHTML+='<br><b>ניסיון נוסף!</b>';
+    return;
+  }
+  // Notes are correct — check bass order
+  const bassOk=noteEq(placed[0],data.bass);
+  if(!bassOk && mcAtt[cur]<2){
+    fb.className='fb info';
+    fb.innerHTML='✓ שמות הצלילים נכונים! אך בדקו את <b>סדר הצלילים — מי צריך להיות הנמוך ביותר?</b>'+
+      '<br><small style="color:#92400e">רמז: '+data.invBox+'</small><br><b>ניסיון נוסף!</b>';
+    return;
+  }
+  chkBtn.disabled=true;
+  if(bassOk){fb.className='fb ok';fb.innerHTML='✓ נכון! <b>'+data.name+'</b>: '+data.expl;rec('ok',placed.join(', '));}
+  else{fb.className='fb partial';fb.innerHTML=(data.inv===0?'½ חצי ניקוד — שמות הצלילים נכונים אך <b>השורש אינו הנמוך ביותר</b>.':'½ חצי ניקוד — שמות הצלילים נכונים אך <b>מצב ההיפוך לא מדויק</b>.<br>'+data.expl);rec('partial',placed.join(', '));}
+  document.getElementById('nb')?.classList.add('show');
+}
+
+// ── TABLE ─────────────────────────────────────────────────────────────────
+function renderTable(main){
+  const bdg=mkEl('div','badge');bdg.innerHTML='📊 חלק ג׳ — טבלת דרגות בסולם';main.appendChild(bdg);
+  const card=mkEl('div','card');addFlag(card);
+  const h=mkEl('div','');h.style.cssText='font-size:.88rem;font-weight:700;margin-bottom:3px';h.innerHTML='בכל שורה ניתן <b>נתון אחד</b> (מסומן בצהוב). מצאו את שם הסולם ומלאו את כל הדרגות החסרות.';card.appendChild(h);
+  const qlb=mkEl('div','');qlb.style.cssText='font-size:.72rem;color:var(--gray);margin-bottom:10px';qlb.textContent='שאלה 18';card.appendChild(qlb);
+  const wrap=mkEl('div','');wrap.style.cssText='overflow-x:auto';
+  const table=document.createElement('table');table.className='dtable';
+  const thead=document.createElement('thead');
+  const hr=document.createElement('tr');
+  ['שם הסולם','I','II','III','IV','V','V⁷ ✦','VI','VII'].forEach((h2,i)=>{
+    const th=document.createElement('th');
+    if(i===0){th.style.cssText='min-width:80px;direction:rtl;text-align:right';th.textContent=h2;}
+    else{if(i===6)th.style.background='#fef9c3';const sp=document.createElement('span');sp.className='rh';sp.textContent=h2;th.appendChild(sp);}
+    hr.appendChild(th);
+  });
+  thead.appendChild(hr);table.appendChild(thead);
+  const tbody=document.createElement('tbody');
+  // Example row
+  const exRow=document.createElement('tr');exRow.className='ex-row';
+  [{cls:'ex-rl',html:'דוגמה<br><small>F מז׳ור</small>'},
+   {m:'F',q:'מג׳ור'},{m:'Gm',q:'מינור'},{m:'Am',q:'מינור'},{m:'B♭',q:'מג׳ור'},
+   {m:'C',q:'מג׳ור'},{m:'C⁷',q:'דומיננטי',hint:true},{m:'Dm',q:'מינור'},{m:'E°',q:'מוקטן'}
+  ].forEach(d=>{
+    const td=document.createElement('td');
+    if(d.html){td.className=d.cls||'';td.innerHTML=d.html;}
+    else if(d.hint){td.className='hint-cell';const hc=document.createElement('span');hc.className='hc';hc.textContent=d.m;const hs=document.createElement('span');hs.className='hs';hs.textContent=d.q;td.appendChild(hc);td.appendChild(hs);}
+    else{const ce=document.createElement('span');ce.className='ce';ce.textContent=d.m;const cq=document.createElement('span');cq.className='cq';cq.textContent=d.q;td.appendChild(ce);td.appendChild(cq);}
+    exRow.appendChild(td);
+  });
+  tbody.appendChild(exRow);
+  tbody.appendChild(buildTblRow(TBL_ROWS[tblRow]));
+  table.appendChild(tbody);wrap.appendChild(table);card.appendChild(wrap);
+  if(results[cur]!==null){
+    const inf=mkEl('div','');inf.style.cssText='margin-top:9px;background:var(--accl);border-radius:7px;padding:9px 12px;font-size:.8rem';
+    inf.innerHTML='הוגש. ייבדק ע"י המורה.<br><b>תשובה:</b> '+TBL_ROWS[tblRow].ans;card.appendChild(inf);
+  } else {
+    const cr=mkEl('div','chk-row');
+    const sb=mkEl('button','chk-btn');sb.textContent='שמרו תשובות';
+    sb.onclick=()=>{rec('ok','table');sb.disabled=true;const fb2=document.getElementById('fb-tbl');fb2.className='fb ok';fb2.textContent='✓ תשובותיכם נשמרו — ייבדקו ע"י המורה.';document.getElementById('nb')?.classList.add('show');};
+    const fb2=mkEl('div','fb');fb2.id='fb-tbl';cr.appendChild(sb);cr.appendChild(fb2);card.appendChild(cr);
+  }
+  const nb=mkNextBtn();nb.textContent='לחלק ד׳ ›';card.appendChild(nb);
+  if(results[cur]!==null)nb.classList.add('show');
+  main.appendChild(card);
+}
+
+function buildTblRow(row){
+  const tr=document.createElement('tr');
+  const nc=document.createElement('td');nc.className='rl-a';
+  const ni=document.createElement('input');ni.type='text';ni.className='rn-inp';ni.placeholder='שם הסולם...';
+  nc.appendChild(ni);tr.appendChild(nc);
+  for(let c=0;c<8;c++){
+    const td=document.createElement('td');
+    if(c===row.hintCol){
+      td.className='hint-cell';
+      const hc=document.createElement('span');hc.className='hc';hc.textContent=row.hint;td.appendChild(hc);
+      const hs=document.createElement('span');hs.className='hs';hs.textContent=row.hintSub;td.appendChild(hs);
+    } else {
+      td.className='a-cell';const inp=document.createElement('input');inp.type='text';inp.autocomplete='off';td.appendChild(inp);
+    }
+    tr.appendChild(td);
+  }
+  return tr;
+}
+
+// ── SCORE ─────────────────────────────────────────────────────────────────
+function renderScore(){
+  document.getElementById('q-ctr').textContent='סיכום';
+  document.getElementById('prog-fill').style.width='100%';
+  document.body.className='pal-0';updateNav();
+  const p1s=results.slice(0,10).filter(r=>r==='ok').length;
+  const p2s=results.slice(10,17).reduce((s,r)=>s+(r==='ok'?1:r==='partial'?0.5:0),0);
+  const tbl=results[17]!==null;
+  const p4as=results.slice(18,22).filter(r=>r==='ok').length;
+  const p4bs=results.slice(22,30).filter(r=>r==='ok').length;
+  const auto=p1s+p2s+p4as+p4bs;
+  const pct=Math.round(auto/MAX_SCORE()*100);
+  const sn=(document.getElementById('sname')?.value||'').trim()||'תלמיד/ה';
+  const sc=(document.getElementById('sclass')?.value||'').trim();
+  let str=[],wk=[];
+  if(p1s>=8)str.push('זיהוי דרגות');else if(p1s<5)wk.push('זיהוי דרגות ('+p1s+'/10)');
+  if(p2s>=5.5)str.push('כתיבת אקורדים');else if(p2s<3)wk.push('כתיבת אקורדים ('+p2s+'/7)');
+  if(p4as+p4bs>=9)str.push('הרמוניה וקדנצות');else if(p4as+p4bs<5)wk.push('קדנצות ('+(p4as+p4bs)+'/12)');
+  const msg=pct>=90
+    ?'<div class="msg-box msg-great">🌟 מצוין! מתן מבסוט עליכן.ם 💪🏻</div>'
+    :pct>=70
+    ?`<div class="msg-box msg-ok">כל הכבוד ${sn}! עבודה יפה 🎵</div>`
+    :`<div class="msg-box msg-retry">עבודה טובה ${sn} — בואו ננסה שוב ונשפר את הציון 👌🏻🍃</div>`;
+  let rows='';given.forEach((g,i)=>{if(!g)return;const lbl=i<10?P1[i].qLabel:i<17?P2[i-10].qLabel:i===17?'שאלה 18 (טבלה)':i<22?P4A[i-18].qLabel:P4B[i-22].qLabel;const ri=g.isOk?'<span class="tag tag-ok">✓</span>':g.isP?'<span class="tag tag-warn">½</span>':'<span class="tag tag-err">✗</span>';rows+=`<tr><td>${i+1}</td><td style="font-size:.7rem">${lbl}</td><td>${ri}</td></tr>`;});
+  document.getElementById('main').innerHTML=`
+<div class="sc-card">
+  <div style="font-size:.92rem;font-weight:700;color:var(--acc);margin-bottom:5px">🎵 סיכום — ${sn}${sc?' | כיתה '+sc:''}</div>
+  <div class="sc-big">${Math.round(auto*10)/10}<span style="font-size:1.1rem;color:var(--gray)">/${MAX_SCORE()}</span></div>
+  <div style="font-size:.78rem;color:var(--gray);margin-top:2px">${pct}% · <span style="color:var(--teal)">טבלה (${tbl?'הוגש ✓':'⚠️ לא הוגש'}) תיבדק ע"י המורה</span></div>
+  <div class="sc-bar"><div class="sc-fill" style="width:0%" id="scb"></div></div>
+  <div class="part-row"><span>חלק א׳ — זיהוי דרגות</span><b>${p1s}/10</b></div>
+  <div class="part-row"><span>חלק ב׳ — כתיבת אקורדים</span><b>${p2s}/7</b></div>
+  <div class="part-row"><span>חלק ג׳ — טבלה (מורה)</span><span style="color:var(--teal);font-size:.75rem">${tbl?'הוגש ✓':'⚠️ לא הוגש'}</span></div>
+  <div class="part-row"><span>חלק ד׳ א — ניתוח הרמוני</span><b>${p4as}/4</b></div>
+  <div class="part-row"><span>חלק ד׳ ב — קדנצות</span><b>${p4bs}/8</b></div>
+  ${msg}
+  ${str.length?`<div style="margin-top:9px"><div style="font-size:.77rem;font-weight:700;color:var(--grn);margin-bottom:3px">💪 חוזקות:</div>${str.map(s=>'<span class="tag tag-ok">'+s+'</span>').join('')}</div>`:''}
+  ${wk.length?`<div style="margin-top:7px"><div style="font-size:.77rem;font-weight:700;color:var(--red);margin-bottom:3px">📚 לחזרה:</div>${wk.map(s=>'<span class="tag tag-err">'+s+'</span>').join('')}</div>`:''}
+  ${rows?'<table class="abtab" style="margin-top:11px"><thead><tr><th>#</th><th>שאלה</th><th>תוצאה</th></tr></thead><tbody>'+rows+'</tbody></table>':''}
+  <div style="display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap">
+    <button class="pdf-btn" onclick="window.print()">📄 להורדת PDF סיכום התוצאות</button>
+    <button class="rst-btn" onclick="tryRestart()">🔄 נסו שוב</button>
+  </div>
+</div>`;
+  setTimeout(()=>{const s=document.getElementById('scb');if(s)s.style.width=pct+'%';},100);
+}
+
+function tryRestart(){
+  if(confirm('ניסיון חוזר יאפס את המשחק הנוכחי.\nלחצו אישור להמשך.')){
+    initVariant(curVar+1);cur=0;render();
+  }
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────
+function mkEl(tag,cls){const e=document.createElement(tag);if(cls)e.className=cls;return e;}
+function addFlag(card){
+  const btn=mkEl('button','flag-btn'+(flagged.has(cur)?' active':''));
+  btn.innerHTML=flagged.has(cur)?'🚩':'⚑';btn.title='סמן לחזרה';
+  btn.onclick=()=>{if(flagged.has(cur)){flagged.delete(cur);btn.innerHTML='⚑';btn.classList.remove('active');}else{flagged.add(cur);btn.innerHTML='🚩';btn.classList.add('active');}updateNav();};
+  card.appendChild(btn);
+}
+function mkNextBtn(){
+  const nb=mkEl('button','next-btn');nb.id='nb';
+  nb.textContent=cur<TOTAL-1?'שאלה הבאה ›':'סיכום ›';
+  nb.onclick=()=>{cur++;render();};return nb;
+}
+function updateNav(){
+  const wrap=document.getElementById('nav-dots');if(!wrap)return;wrap.innerHTML='';
+  const seps=[10,17,18,22];
+  for(let i=0;i<TOTAL;i++){
+    if(seps.includes(i)){const d=mkEl('div','sec-div');wrap.appendChild(d);}
+    const r=results[i];
+    const d=mkEl('div','ndot'+(i===cur?' cur':'')+(r==='ok'?' done-ok':r==='err'?' done-err':r==='partial'?' done-p':'')+(flagged.has(i)?' flagged':''));
+    d.textContent=String(i+1);d.title='שאלה '+(i+1);d.onclick=()=>render(i);wrap.appendChild(d);
+  }
+  const fin=mkEl('div','');fin.style.cssText='padding:2px 6px;border-radius:4px;background:rgba(255,255,255,.1);cursor:pointer;font-size:.57rem;color:rgba(255,255,255,.45);margin-right:2px;border:1px solid rgba(255,255,255,.15)';
+  fin.textContent='סיכום';fin.onclick=()=>{cur=TOTAL;renderScore();};wrap.appendChild(fin);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+initVariant(0);
+render();
+</script>
+</body>
+</html>
