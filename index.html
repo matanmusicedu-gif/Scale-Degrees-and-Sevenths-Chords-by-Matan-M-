@@ -821,98 +821,86 @@ const P2_POOL=[
 ];
 const P2_VARS=[[0,1,2,3,4,5,6],[0,2,3,5,6,7,8],[1,3,4,6,7,8,9]];
 
-const P4A=[
-  {badge:'חלק ד׳ א — ניתוח הרמוני',qLabel:'שאלה 19',
-   q:'הרצף <span class="ltr">Dm – G7 – C</span> בסולם <span class="ltr">C Major</span> — מהו הניתוח הנכון?',
-   opts:['<span class="ltr">ii – V⁷ – I</span> (קדנצה אותנטית עם סופר-טוניקה)',
-         '<span class="ltr">IV – V⁷ – I</span> (קדנצה אותנטית מושלמת)',
-         '<span class="ltr">vi – V⁷ – I</span> (תנועה מדיאנטית)',
-         '<span class="ltr">ii⁶ – V⁷ – I</span> (היפוך ראשון)'],
-   ans:0,expl:'Dm=ii, G⁷=V⁷, C=I. רצף ii–V–I קלאסי.',
-   prog:[[62,65,69],[67,71,74,77],[60,64,67]]},
-  {badge:'חלק ד׳ א — ניתוח הרמוני',qLabel:'שאלה 20',
-   q:'הרצף <span class="ltr">C – F – A♭ – G</span> בסולם <span class="ltr">C Major</span> — <span class="ltr">A♭</span> הוא אקורד שאול. מאיזה סולם?',
-   opts:['שאול מסולם <span class="ltr">C</span> מינור טבעי — דרגה <span class="ltr">♭VI</span>',
-         'שאול מסולם <span class="ltr">G</span> מינור — דרגה <span class="ltr">♭II</span>',
-         'אינו שאול — קיים ב-<span class="ltr">C Major</span>',
-         'שאול מסולם <span class="ltr">F Major</span>'],
-   ans:0,expl:'A♭ = ♭VI שאול מ-C מינור טבעי.',
-   prog:[[60,64,67],[65,69,72],[68,72,75],[67,71,74]]},
-  {badge:'חלק ד׳ א — ניתוח הרמוני',qLabel:'שאלה 21',
-   q:'מהלך שמסתיים על דרגה <span class="ltr">V</span> ואינו פותר ל-<span class="ltr">I</span> — כיצד נקרא?',
-   opts:['קדנצה חצי (Half Cadence)','קדנצה אותנטית (Authentic Cadence)',
-         'קדנצה פלגלית (Plagal Cadence)','קדנצה מדומה (Deceptive Cadence)'],
-   ans:0,expl:'קדנצה חצי — מסתיימת על V ללא פתרון לטוניקה.',
-   prog:[[60,64,67],[67,71,74]]},
-  {badge:'חלק ד׳ א — ניתוח הרמוני',qLabel:'שאלה 22',
-   q:'הרצף <span class="ltr">G – Am</span> בסולם <span class="ltr">C Major</span> — מהי הקדנצה?',
-   opts:['קדנצה מדומה (Deceptive Cadence)','קדנצה אותנטית (Authentic Cadence)',
-         'קדנצה פלגלית (Plagal Cadence)','קדנצה חצי (Half Cadence)'],
-   ans:0,expl:'V → vi במקום V → I = קדנצה מדומה.',
-   prog:[[67,71,74],[69,72,76]]}
-];
-
 const P4B=[
+  // ── Cadence type questions (easy, one per type) ────────────────────────
+  // Q1: Authentic — ans pos 1
+  {badge:'חלק ד׳ ב — קדנצות',qLabel:'שאלה 22',
+   q:'המהלך <span class="ltr">V → I</span> — מסיים בתחושה של סיום מוחלט. מה שמה?',
+   opts:['קדנצה פלגלית','קדנצה אותנטית','קדנצה חצי (אתנח דומיננטי)','קדנצה מדומה'],
+   ans:1,expl:'V → I = קדנצה אותנטית — הפתרון השלם והאופייני ביותר.',
+   prog:[[65,67,71,74],[64,67,72]]},  // voice-led: F→E G stays B→C
+  // Q2: Deceptive — ans pos 3
   {badge:'חלק ד׳ ב — קדנצות',qLabel:'שאלה 23',
-   q:'המהלך <span class="ltr">V → I</span> — כיצד נקראת הקדנצה?',
-   opts:['קדנצה אותנטית','קדנצה פלגלית','קדנצה חצי','קדנצה מדומה'],
-   ans:0,expl:'V → I = קדנצה אותנטית.',prog:[[67,71,74],[60,64,67]]},
+   q:'המהלך <span class="ltr">V → vi</span> — הצופה מצפה ל-I, ומקבל vi. מה שמה?',
+   opts:['קדנצה אותנטית','קדנצה חצי','קדנצה פלגלית','קדנצה מדומה'],
+   ans:3,expl:'V → vi = קדנצה מדומה — מפתיעה את האוזן!',
+   prog:[[67,71,74],[69,72,76]]},
+  // Q3: Half/Dominant — ans pos 2
   {badge:'חלק ד׳ ב — קדנצות',qLabel:'שאלה 24',
-   q:'המהלך <span class="ltr">IV → I</span> — כיצד נקראת הקדנצה?',
-   opts:['קדנצה פלגלית','קדנצה אותנטית','קדנצה חצי','קדנצה מדומה'],
-   ans:0,expl:'IV → I = קדנצה פלגלית.',prog:[[65,69,72],[60,64,67]]},
+   q:'המהלך <span class="ltr">I → V</span> — מסתיים על מתח בלי פתרון. מה שמה?',
+   opts:['קדנצה מדומה','קדנצה פלגלית','אתנח דומיננטי (קדנצה חצי)','קדנצה אותנטית'],
+   ans:2,expl:'I → V = אתנח דומיננטי (Half Cadence) — מסתיים על V, יוצר תחושת השהייה.',
+   prog:[[67,72,76],[67,71,74]]},  // voice-led: G stays C→B E→D
+  // Q4: Plagal — ans pos 0
   {badge:'חלק ד׳ ב — קדנצות',qLabel:'שאלה 25',
-   q:'מהלך שמסתיים על <span class="ltr">V</span> ויוצר תחושה של השהייה:',
-   opts:['קדנצה חצי','קדנצה אותנטית','קדנצה פלגלית','קדנצה מדומה'],
-   ans:0,expl:'קדנצה חצי — מסתיימת על V.',prog:[[60,64,67],[67,71,74]]},
-  // V6/5 → I  (G7/B → C in C Major — 1st inversion: 3rd in bass)
+   q:'המהלך <span class="ltr">IV → I</span> — נקרא גם "אמן". מה שמה?',
+   opts:['קדנצה פלגלית','קדנצה אותנטית','קדנצה חצי','קדנצה מדומה'],
+   ans:0,expl:'IV → I = קדנצה פלגלית — מאפיינת מוזיקה דתית/כנסייתית.',
+   prog:[[65,69,72],[64,67,72]]},  // voice-led: F→E A→G C stays
+  // Q5: Picardy — ans pos 1
   {badge:'חלק ד׳ ב — קדנצות',qLabel:'שאלה 26',
-   q:'<span class="ltr">V⁶₅</span> הוא ספטאקורד הדומיננטה בהיפוך ראשון. מה נמצא בבסיס?',
-   opts:['הטרצה (הדרגה ה-3 של האקורד)','השורש (הדרגה ה-1)','הקווינטה (הדרגה ה-5)','השביעית (הדרגה ה-7)'],
-   ans:0,
-   expl:'V⁶₅: היפוך ראשון — הטרצה בבסיס. לדוגמה: G7/B בסולם C → B–D–F–G, פותר ל-C מג׳ור.',
-   prog:[[59,62,65,67],[60,64,67,72]]},  // G7/B(B3,D4,F4,G4) → C(C4,E4,G4,C5)
-  // V4/3 → I  (G7/D → C in C Major — 2nd inversion: 5th in bass)
+   q:'יצירה בסולם <span class="ltr">A</span> מינור שמסתיימת על <span class="ltr">A Major</span> (מג׳ור). מה שמה?',
+   opts:['קדנצה אותנטית','קדנצה פיקארדית','קדנצה פלגלית','אתנח דומיננטי'],
+   ans:1,expl:'קדנצה פיקארדית — סיום ביצירה מינורית על אקורד I מג׳ורי. מביאה תחושת אור ופתיחות.',
+   prog:[[69,72,76],[69,73,76]]},  // Am → A Major: A stays C→C# E stays
+  // ── Inversion questions ────────────────────────────────────────────────
+  // Q6: V6/5 — ans pos 2
   {badge:'חלק ד׳ ב — קדנצות',qLabel:'שאלה 27',
-   q:'<span class="ltr">V⁴₃</span> הוא ספטאקורד הדומיננטה בהיפוך שני. מה נמצא בבסיס, ולאן הוא פותר?',
-   opts:['הקווינטה בבסיס — פותר ל-<span class="ltr">I</span> (מצב יסודי)',
-         'השורש בבסיס — פותר ל-<span class="ltr">I</span>',
-         'הטרצה בבסיס — פותר ל-<span class="ltr">I⁶</span>',
-         'השביעית בבסיס — פותר ל-<span class="ltr">I⁶</span>'],
-   ans:0,
-   expl:'V⁴₃: היפוך שני — הקווינטה בבסיס. G7/D בסולם C → D–F–G–B, פותר ל-C מג׳ור (מצב יסודי).',
-   prog:[[62,65,67,71],[60,64,67,72]]},  // G7/D(D4,F4,G4,B4) → C(C4,E4,G4,C5)
-  // V2 — 3rd inversion: 7th in bass
+   q:'<span class="ltr">V⁶₅</span> הוא ספטאקורד הדומיננטה בהיפוך ראשון. מה נמצא בבסיס?',
+   opts:['השורש (הדרגה ה-1)','השביעית (הדרגה ה-7)','הטרצה (הדרגה ה-3)','הקווינטה (הדרגה ה-5)'],
+   ans:2,
+   expl:'V⁶₅: היפוך ראשון — הטרצה בבסיס. G7/B בסולם C → B–D–F–G, פותר ל-C מג׳ור.',
+   prog:[[59,62,65,67],[60,64,67,72]]},
+  // Q7: V4/3 — ans pos 3
   {badge:'חלק ד׳ ב — קדנצות',qLabel:'שאלה 28',
-   q:'<span class="ltr">V²</span> הוא ספטאקורד הדומיננטה בהיפוך השלישי. מה נמצא בבסיס, ולאן הוא פותר?',
-   opts:['השביעית בבסיס — פותר ל-<span class="ltr">I⁶</span> (הטרצה של I בבסיס)',
+   q:'<span class="ltr">V⁴₃</span> הוא ספטאקורד הדומיננטה בהיפוך שני. מה נמצא בבסיס?',
+   opts:['השביעית','הטרצה','השורש','הקווינטה'],
+   ans:3,
+   expl:'V⁴₃: היפוך שני — הקווינטה בבסיס. G7/D בסולם C → D–F–G–B, פותר ל-C מג׳ור.',
+   prog:[[62,65,67,71],[60,64,67,72]]},
+  // Q8: V2 — ans pos 0
+  {badge:'חלק ד׳ ב — קדנצות',qLabel:'שאלה 29',
+   q:'<span class="ltr">V²</span> הוא ספטאקורד הדומיננטה בהיפוך השלישי. מה נמצא בבסיס ולאן פותר?',
+   opts:['השביעית בבסיס — פותר ל-<span class="ltr">I⁶</span>',
          'הטרצה בבסיס — פותר ל-<span class="ltr">I</span>',
          'הקווינטה בבסיס — פותר ל-<span class="ltr">I</span>',
          'השורש בבסיס — פותר ל-<span class="ltr">I</span>'],
    ans:0,
-   expl:'V²: היפוך שלישי — השביעית (F) בבסיס. G7/F בסולם C → F–G–B–D, פותר ל-C/E (I⁶ — הטרצה E בבסיס).',
-   prog:[[53,55,59,62],[52,55,60,64]]},  // G7/F(F3,G3,B3,D4) → C/E(E3,G3,C4,E4)
-  // Septima resolution (scale degree 4 → 3)
-  {badge:'חלק ד׳ ב — קדנצות',qLabel:'שאלה 29',
-   q:'בספטאקורד הדומיננטי (<span class="ltr">V⁷</span>) — לאיזה כיוון רוצה להיפתר ה<b>ספטימה</b> (דרגה <span class="ltr">4</span> בסולם)?',
-   opts:['כלפי מטה — לטרצה של <span class="ltr">I</span> (דרגה <span class="ltr">3</span> בסולם)',
-         'כלפי מעלה — לטוניקה (דרגה <span class="ltr">1</span>)',
-         'כלפי מטה — לדרגה <span class="ltr">2</span> בסולם',
-         'נשארת על אותו הצליל (תנועה אפסית)'],
-   ans:0,
-   expl:'הספטימה (F בסולם C) — דרגה 4 — רוצה לרדת למטה לדרגה 3 (E), הטרצה של אקורד I. זו תנועת סקונדה מוסיקלית טבעית.',
-   prog:[[67,65],[60,64]]},  // G→F resolving down: F4→E4 over C chord
-  // Leading tone resolution (scale degree 7 → 8)
+   expl:'V²: היפוך שלישי — השביעית (F) בבסיס. G7/F בסולם C → F–G–B–D, פותר ל-C/E (I⁶).',
+   prog:[[53,55,59,62],[52,55,60,64]]},
+  // Q9: Septima resolution — ans pos 1
   {badge:'חלק ד׳ ב — קדנצות',qLabel:'שאלה 30',
-   q:'בספטאקורד הדומיננטי (<span class="ltr">V⁷</span>) — לאיזה כיוון רוצה להיפתר <b>הטרצה</b> (דרגה <span class="ltr">7</span> בסולם — צליל המוביל)?',
-   opts:['כלפי מעלה — לטוניקה של <span class="ltr">I</span> (דרגה <span class="ltr">8/1</span> בסולם)',
-         'כלפי מטה — לדרגה <span class="ltr">6</span> בסולם',
-         'כלפי מעלה — לדרגה <span class="ltr">2</span> בסולם',
-         'נשארת על אותו הצליל (תנועה אפסית)'],
-   ans:0,
-   expl:'הטרצה של V⁷ (B בסולם C) היא דרגה 7 — "צליל מוביל" (Leading Tone) — רוצה לעלות למעלה לטוניקה (C), דרגה 8/1. תנועת חצי-טון טבעית.',
-   prog:[[65,71],[64,72]]}  // F4+B4 (septima+leading tone) → E4+C5 (resolve inward)
+   q:'בספטאקורד הדומיננטי (<span class="ltr">V⁷</span>) — לאיזה כיוון פותרת ה<b>ספטימה</b> (דרגה <span class="ltr">4</span>)?',
+   opts:['כלפי מעלה — לדרגה <span class="ltr">5</span>',
+         'כלפי מטה — לדרגה <span class="ltr">3</span> (טרצה של I)',
+         'כלפי מעלה — לדרגה <span class="ltr">1</span>',
+         'נשארת על מקומה'],
+   ans:1,
+   expl:'הספטימה (F בסולם C) — דרגה 4 — יורדת לדרגה 3 (E), הטרצה של I.',
+   prog:[[67,65],[60,64]]},
+  // Q10: Leading tone — ans pos 2
+  {badge:'חלק ד׳ ב — קדנצות',qLabel:'שאלה 31',
+   q:'בספטאקורד הדומיננטי (<span class="ltr">V⁷</span>) — לאיזה כיוון פותר <b>צליל המוביל</b> (דרגה <span class="ltr">7</span>)?',
+   opts:['כלפי מטה — לדרגה <span class="ltr">6</span>',
+         'נשארת על מקומה',
+         'כלפי מעלה — לטוניקה (דרגה <span class="ltr">1/8</span>)',
+         'כלפי מעלה — לדרגה <span class="ltr">2</span>'],
+   ans:2,
+   expl:'הטרצה של V⁷ (B בסולם C) — דרגה 7, צליל מוביל — עולה חצי טון לטוניקה (C).',
+   prog:[[65,71],[64,72]]}
 ];
+
+
 
 const TBL_ROWS=[
   {hint:'D⁷',hintSub:'נתון (V⁷)',hintCol:5,ans:'G Major: G – Am – Bm – C – D – D⁷ – Em – F♯°'},
@@ -920,11 +908,66 @@ const TBL_ROWS=[
   {hint:'F♯°',hintSub:'נתון (VII°)',hintCol:7,ans:'G Major: G – Am – Bm – C – D – D⁷ – Em – F♯°'}
 ];
 
+
+// ── SAVE / LOAD PROGRESS ──────────────────────────────────────────────────
+const SAVE_KEY='exam_progress_v1';
+
+async function saveProgress(){
+  if(!window.storage) return;
+  const state={
+    cur, curVar, score,
+    results:[...results],
+    given:given.map(g=>g?{giv:g.giv,isOk:g.isOk,isP:g.isP}:null),
+    flagged:[...flagged],
+    mcAtt:[...mcAtt],
+    tblRow,
+    sname:document.getElementById('sname')?.value||'',
+    sclass:document.getElementById('sclass')?.value||'',
+    savedAt:new Date().toLocaleString('he-IL')
+  };
+  try{ await window.storage.set(SAVE_KEY, JSON.stringify(state)); }
+  catch(e){ console.warn('save failed',e); }
+}
+
+async function loadProgress(){
+  if(!window.storage) return false;
+  try{
+    const r=await window.storage.get(SAVE_KEY);
+    if(!r) return false;
+    const s=JSON.parse(r.value);
+    curVar=s.curVar||0;
+    initVariant(curVar);
+    cur=s.cur||0;
+    score=s.score||0;
+    results=s.results||new Array(TOTAL).fill(null);
+    given=s.given||new Array(TOTAL).fill(null);
+    flagged=new Set(s.flagged||[]);
+    mcAtt=s.mcAtt||new Array(TOTAL).fill(0);
+    tblRow=s.tblRow||0;
+    updScore();
+    return s.savedAt||true;
+  }catch(e){ return false; }
+}
+
+async function clearSave(){
+  if(!window.storage) return;
+  try{ await window.storage.delete(SAVE_KEY); }catch(e){}
+}
+
+function showSaveToast(msg){
+  let t=document.getElementById('save-toast');
+  if(!t){t=document.createElement('div');t.id='save-toast';
+    t.style.cssText='position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:7px 16px;border-radius:20px;font-size:.78rem;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none';
+    document.body.appendChild(t);}
+  t.textContent=msg;t.style.opacity='1';
+  clearTimeout(t._tm);t._tm=setTimeout(()=>{t.style.opacity='0';},2200);
+}
+
 // ── STATE ──────────────────────────────────────────────────────────────────
 let curVar=0,cur=0,score=0,tblRow=0;
 let P1=[],P2=[];
 let results,given,flagged,mcAtt;
-const TOTAL=30;
+const TOTAL=29;
 
 function initVariant(v){
   curVar=v%3;
@@ -947,10 +990,10 @@ function getPage(i){
   if(i<10) return {type:'p1',data:P1[i]};
   if(i<17) return {type:'write',data:P2[i-10],writeIdx:i-10};
   if(i===17) return {type:'table'};
-  if(i<22) return {type:'p4a',data:P4A[i-18]};
-  return {type:'p4b',data:P4B[i-22]};
+  if(i===18) return {type:'cadence_learn'};
+  return {type:'p4b',data:P4B[i-19]};
 }
-const MAX_SCORE=()=>29; // 10+7+4+8
+const MAX_SCORE=()=>26; // 10+7+9 (table+cadence_learn not scored)
 
 function updScore(){
   const pct=Math.min(100,Math.round(score/MAX_SCORE()*100));
@@ -962,6 +1005,7 @@ function rec(res,giv){
   const old=results[cur];results[cur]=res;given[cur]={giv,isOk:res==='ok',isP:res==='partial'};
   if(!old){if(res==='ok')score+=1;else if(res==='partial')score+=0.5;}
   updateNav();updScore();
+  saveProgress(); // auto-save on every answer
 }
 
 // ── RENDER ────────────────────────────────────────────────────────────────
@@ -969,14 +1013,15 @@ function render(pg){
   if(pg!==undefined)cur=pg;
   stopAll(); // stop any playing audio on navigation
   if(cur>=TOTAL){renderScore();return;}
-  document.body.className='pal-'+(cur%9);
-  document.getElementById('q-ctr').textContent=`שאלה ${cur+1} / ${TOTAL}`;
+  document.body.className=getPage(cur).type==='cadence_learn'?'pal-5':'pal-'+(cur%9);
+  document.getElementById('q-ctr').textContent=getPage(cur).type==='cadence_learn'?'📚 דף לימוד':`שאלה ${cur+1} / ${TOTAL}`;
   document.getElementById('prog-fill').style.width=`${(cur/TOTAL)*100}%`;
   const main=document.getElementById('main');main.innerHTML='';
   const pg2=getPage(cur);
   if(pg2.type==='p1') renderP1(main,pg2.data);
   else if(pg2.type==='write') renderWrite(main,pg2.data,pg2.writeIdx);
   else if(pg2.type==='table') renderTable(main);
+  else if(pg2.type==='cadence_learn') renderCadenceLearn(main);
   else renderMC4(main,pg2.data);
   updateNav();main.scrollTop=0;
 }
@@ -1192,6 +1237,117 @@ function checkWrite(sid,data,chkBtn){
   document.getElementById('nb')?.classList.add('show');
 }
 
+
+// ── CADENCE LEARN PAGE ─────────────────────────────────────────────────────
+const CADENCE_TYPES=[
+  // Voice leading: F→E (down), G stays, B→C (up ½), D dropped
+  {name:'קדנצה אותנטית',nameEn:'Authentic Cadence',emoji:'✅',
+   desc:'המהלך הסופי והשלם ביותר — <b>V⁷ → I</b>. הדומיננטה פותרת לטוניקה. האוזן מרגישה סיום מלא.',
+   formula:'V⁷ → I',
+   notes1:[{letter:'F',acc:'',octaveAdj:0},{letter:'G',acc:'',octaveAdj:0},{letter:'B',acc:'',octaveAdj:0},{letter:'D',acc:'',octaveAdj:1}],
+   notes2:[{letter:'E',acc:'',octaveAdj:0},{letter:'G',acc:'',octaveAdj:0},{letter:'C',acc:'',octaveAdj:1}],
+   prog:[[65,67,71,74],[64,67,72]],
+   color:'#dcfce7',border:'#86efac',text:'#166534'},
+  // Voice leading: G→A (up), B→C (up ½), D→E (up)
+  {name:'קדנצה מדומה',nameEn:'Deceptive Cadence',emoji:'🎭',
+   desc:'מתחילה כמו אותנטית אבל מפתיעה! <b>V → vi</b>. האוזן מצפה ל-I, ומקבלת vi.',
+   formula:'V → vi',
+   notes1:[{letter:'G',acc:'',octaveAdj:0},{letter:'B',acc:'',octaveAdj:0},{letter:'D',acc:'',octaveAdj:1}],
+   notes2:[{letter:'A',acc:'',octaveAdj:0},{letter:'C',acc:'',octaveAdj:1},{letter:'E',acc:'',octaveAdj:1}],
+   prog:[[67,71,74],[69,72,76]],
+   color:'#fef3c7',border:'#fde68a',text:'#92400e'},
+  // Voice leading: G stays, C→B (down ½), E→D (down)
+  {name:'אתנח דומיננטי',nameEn:'Half Cadence',emoji:'⏸️',
+   desc:'מסתיים על <b>V</b> — מרגיש כמו נקודה-פסיק. יוצר מתח וציפייה להמשך.',
+   formula:'I → V',
+   notes1:[{letter:'G',acc:'',octaveAdj:0},{letter:'C',acc:'',octaveAdj:1},{letter:'E',acc:'',octaveAdj:1}],
+   notes2:[{letter:'G',acc:'',octaveAdj:0},{letter:'B',acc:'',octaveAdj:0},{letter:'D',acc:'',octaveAdj:1}],
+   prog:[[67,72,76],[67,71,74]],
+   color:'#eff6ff',border:'#93c5fd',text:'#1e40af'},
+  // Voice leading: F→E (down), A→G (down), C stays
+  {name:'קדנצה פלגלית',nameEn:'Plagal Cadence',emoji:'🙏',
+   desc:'נקראת גם "קדנצת האמן" — <b>IV → I</b>. נפוצה במוזיקה דתית וכנסייתית.',
+   formula:'IV → I',
+   notes1:[{letter:'F',acc:'',octaveAdj:0},{letter:'A',acc:'',octaveAdj:0},{letter:'C',acc:'',octaveAdj:1}],
+   notes2:[{letter:'E',acc:'',octaveAdj:0},{letter:'G',acc:'',octaveAdj:0},{letter:'C',acc:'',octaveAdj:1}],
+   prog:[[65,69,72],[64,67,72]],
+   color:'#f3e8ff',border:'#c4b5fd',text:'#6d28d9'},
+  // Voice leading: A stays, C→C# (up ½), E stays
+  {name:'קדנצה פיקארדית',nameEn:'Picardy Third',emoji:'☀️',
+   desc:'יצירה <b>מינורית</b> שמסתיימת על <b>I מג׳ורי</b>! תחושה של אור פתאומי בסוף.',
+   formula:'(minor) → I Major',
+   notes1:[{letter:'A',acc:'',octaveAdj:0},{letter:'C',acc:'',octaveAdj:1},{letter:'E',acc:'',octaveAdj:1}],
+   notes2:[{letter:'A',acc:'',octaveAdj:0},{letter:'C',acc:'#',octaveAdj:1},{letter:'E',acc:'',octaveAdj:1}],
+   prog:[[69,72,76],[69,73,76]],
+   color:'#fef9c3',border:'#fde047',text:'#78350f'}
+];
+
+function renderCadenceLearn(main){
+  const bdg=mkEl('div','badge');bdg.innerHTML='📚 דף לימוד — סוגי קדנצות';main.appendChild(bdg);
+  const intro=mkEl('div','card');intro.style.cssText='margin-bottom:10px;padding:13px 15px';
+  intro.innerHTML='<div style="font-size:.9rem;font-weight:700;margin-bottom:5px">🎵 מה זו קדנצה?</div>'+
+    '<div style="font-size:.82rem;line-height:1.75;color:#374151">קדנצה היא <b>מהלך הרמוני שמסמן סוף פסוקית או יצירה</b>. '+
+    'כמו נקודה בסוף משפט. ישנם מספר סוגים — כל אחד יוצר תחושה שונה באוזן.</div>';
+  main.appendChild(intro);
+
+  CADENCE_TYPES.forEach((cad,ci)=>{
+    const card=mkEl('div','card');card.style.marginBottom='10px';
+    const hdr=mkEl('div','');
+    hdr.style.cssText='display:flex;align-items:center;gap:8px;margin-bottom:8px';
+    const em=mkEl('span','');em.style.cssText='font-size:1.3rem';em.textContent=cad.emoji;
+    const ttl=mkEl('div','');
+    ttl.innerHTML='<div style="font-size:.9rem;font-weight:700;color:var(--acc)">'+cad.name+'</div>'+
+      '<div style="font-size:.68rem;color:var(--gray)">'+cad.nameEn+'</div>';
+    const fml=mkEl('div','');
+    fml.style.cssText='margin-right:auto;background:var(--accl);border:1.5px solid var(--accm);border-radius:10px;padding:3px 10px;font-size:.78rem;font-weight:700;color:var(--acc);font-family:Georgia,serif;direction:ltr';
+    fml.textContent=cad.formula;
+    hdr.appendChild(em);hdr.appendChild(ttl);hdr.appendChild(fml);card.appendChild(hdr);
+
+    const desc=mkEl('div','');
+    desc.style.cssText='font-size:.8rem;line-height:1.7;color:#374151;margin-bottom:10px;background:'+cad.color+';border:1px solid '+cad.border+';border-radius:7px;padding:7px 11px;color:'+cad.text;
+    desc.innerHTML=cad.desc;card.appendChild(desc);
+
+    // Two mini staves side by side
+    const staves=mkEl('div','');
+    staves.style.cssText='display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:nowrap;overflow-x:auto';
+
+    function mkMiniStaff(notes,svgId){
+      const wrap=mkEl('div','');wrap.style.cssText='flex:1;min-width:120px;max-width:200px';
+      const so=mkEl('div','staff-outer');
+      const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+      svg.setAttribute('class','staff-svg');svg.id=svgId;
+      so.appendChild(svg);wrap.appendChild(so);
+      return {wrap,svg};
+    }
+    const s1=mkMiniStaff(cad.notes1,'cad-s1-'+ci);
+    const arrow=mkEl('div','');arrow.style.cssText='font-size:1.4rem;color:var(--acc);flex-shrink:0;font-weight:700';arrow.textContent='→';
+    const s2=mkMiniStaff(cad.notes2,'cad-s2-'+ci);
+    // RTL: first child appears on right — put destination (notes2=I) first so it's on the right
+    staves.appendChild(s2.wrap);staves.appendChild(arrow);staves.appendChild(s1.wrap);
+    card.appendChild(staves);
+
+    // Play button
+    const pb=mkEl('button','pre-play-btn');
+    pb.innerHTML='▶ נגן '+cad.name;
+    const pid='cad-pb-'+ci;pb.id=pid;
+    pb.onclick=(()=>{
+      const prog=cad.prog;
+      return ()=>{
+        pb.classList.add('playing');pb.innerHTML='⏹ מנגן...';
+        playHarmProg(prog,()=>{pb.classList.remove('playing');pb.innerHTML='▶ נגן '+cad.name;});
+      };
+    })();
+    card.appendChild(pb);
+    main.appendChild(card);
+
+    // Draw staves after DOM insert
+    setTimeout(()=>{drawStaff(s1.svg,cad.notes1);drawStaff(s2.svg,cad.notes2);},50+ci*20);
+  });
+
+  const nb=mkNextBtn();nb.classList.add('show');nb.textContent='לשאלות ›';
+  main.appendChild(nb);
+}
+
 // ── TABLE ─────────────────────────────────────────────────────────────────
 function renderTable(main){
   const bdg=mkEl('div','badge');bdg.innerHTML='📊 חלק ג׳ — טבלת דרגות בסולם';main.appendChild(bdg);
@@ -1266,22 +1422,21 @@ function renderScore(){
   const p1s=results.slice(0,10).filter(r=>r==='ok').length;
   const p2s=results.slice(10,17).reduce((s,r)=>s+(r==='ok'?1:r==='partial'?0.5:0),0);
   const tbl=results[17]!==null;
-  const p4as=results.slice(18,22).filter(r=>r==='ok').length;
-  const p4bs=results.slice(22,30).filter(r=>r==='ok').length;
-  const auto=p1s+p2s+p4as+p4bs;
+  const p4bs=results.slice(19,29).filter(r=>r==='ok').length;
+  const auto=p1s+p2s+p4bs;
   const pct=Math.round(auto/MAX_SCORE()*100);
   const sn=(document.getElementById('sname')?.value||'').trim()||'תלמיד/ה';
   const sc=(document.getElementById('sclass')?.value||'').trim();
   let str=[],wk=[];
   if(p1s>=8)str.push('זיהוי דרגות');else if(p1s<5)wk.push('זיהוי דרגות ('+p1s+'/10)');
   if(p2s>=5.5)str.push('כתיבת אקורדים');else if(p2s<3)wk.push('כתיבת אקורדים ('+p2s+'/7)');
-  if(p4as+p4bs>=9)str.push('הרמוניה וקדנצות');else if(p4as+p4bs<5)wk.push('קדנצות ('+(p4as+p4bs)+'/12)');
+  if(p4bs>=7)str.push('קדנצות');else if(p4bs<4)wk.push('קדנצות ('+p4bs+'/9)');
   const msg=pct>=90
     ?'<div class="msg-box msg-great">🌟 מצוין! מתן מבסוט עליכן.ם 💪🏻</div>'
     :pct>=70
     ?`<div class="msg-box msg-ok">כל הכבוד ${sn}! עבודה יפה 🎵</div>`
     :`<div class="msg-box msg-retry">עבודה טובה ${sn} — בואו ננסה שוב ונשפר את הציון 👌🏻🍃</div>`;
-  let rows='';given.forEach((g,i)=>{if(!g)return;const lbl=i<10?P1[i].qLabel:i<17?P2[i-10].qLabel:i===17?'שאלה 18 (טבלה)':i<22?P4A[i-18].qLabel:P4B[i-22].qLabel;const ri=g.isOk?'<span class="tag tag-ok">✓</span>':g.isP?'<span class="tag tag-warn">½</span>':'<span class="tag tag-err">✗</span>';rows+=`<tr><td>${i+1}</td><td style="font-size:.7rem">${lbl}</td><td>${ri}</td></tr>`;});
+  let rows='';given.forEach((g,i)=>{if(!g)return;const lbl=i<10?P1[i].qLabel:i<17?P2[i-10].qLabel:i===17?'שאלה 18 (טבלה)':i===18?'דף לימוד':P4B[i-19].qLabel;const ri=g.isOk?'<span class="tag tag-ok">✓</span>':g.isP?'<span class="tag tag-warn">½</span>':'<span class="tag tag-err">✗</span>';rows+=`<tr><td>${i+1}</td><td style="font-size:.7rem">${lbl}</td><td>${ri}</td></tr>`;});
   document.getElementById('main').innerHTML=`
 <div class="sc-card">
   <div style="font-size:.92rem;font-weight:700;color:var(--acc);margin-bottom:5px">🎵 סיכום — ${sn}${sc?' | כיתה '+sc:''}</div>
@@ -1291,8 +1446,7 @@ function renderScore(){
   <div class="part-row"><span>חלק א׳ — זיהוי דרגות</span><b>${p1s}/10</b></div>
   <div class="part-row"><span>חלק ב׳ — כתיבת אקורדים</span><b>${p2s}/7</b></div>
   <div class="part-row"><span>חלק ג׳ — טבלה (מורה)</span><span style="color:var(--teal);font-size:.75rem">${tbl?'הוגש ✓':'⚠️ לא הוגש'}</span></div>
-  <div class="part-row"><span>חלק ד׳ א — ניתוח הרמוני</span><b>${p4as}/4</b></div>
-  <div class="part-row"><span>חלק ד׳ ב — קדנצות</span><b>${p4bs}/8</b></div>
+  <div class="part-row"><span>חלק ד׳ ב — קדנצות</span><b>${p4bs}/9</b></div>
   ${msg}
   ${str.length?`<div style="margin-top:9px"><div style="font-size:.77rem;font-weight:700;color:var(--grn);margin-bottom:3px">💪 חוזקות:</div>${str.map(s=>'<span class="tag tag-ok">'+s+'</span>').join('')}</div>`:''}
   ${wk.length?`<div style="margin-top:7px"><div style="font-size:.77rem;font-weight:700;color:var(--red);margin-bottom:3px">📚 לחזרה:</div>${wk.map(s=>'<span class="tag tag-err">'+s+'</span>').join('')}</div>`:''}
@@ -1326,12 +1480,13 @@ function mkNextBtn(){
 }
 function updateNav(){
   const wrap=document.getElementById('nav-dots');if(!wrap)return;wrap.innerHTML='';
-  const seps=[10,17,18,22];
+  const seps=[10,17,18,19];
   for(let i=0;i<TOTAL;i++){
     if(seps.includes(i)){const d=mkEl('div','sec-div');wrap.appendChild(d);}
     const r=results[i];
-    const d=mkEl('div','ndot'+(i===cur?' cur':'')+(r==='ok'?' done-ok':r==='err'?' done-err':r==='partial'?' done-p':'')+(flagged.has(i)?' flagged':''));
-    d.textContent=String(i+1);d.title='שאלה '+(i+1);d.onclick=()=>render(i);wrap.appendChild(d);
+    const isLearn=getPage(i).type==='cadence_learn';
+    const d=mkEl('div','ndot'+(i===cur?' cur':'')+(isLearn?' done-ok':r==='ok'?' done-ok':r==='err'?' done-err':r==='partial'?' done-p':'')+(flagged.has(i)?' flagged':''));
+    d.textContent=isLearn?'📚':String(i+1);d.title=isLearn?'דף לימוד':'שאלה '+(i+1);d.onclick=()=>render(i);wrap.appendChild(d);
   }
   const fin=mkEl('div','');fin.style.cssText='padding:2px 6px;border-radius:4px;background:rgba(255,255,255,.1);cursor:pointer;font-size:.57rem;color:rgba(255,255,255,.45);margin-right:2px;border:1px solid rgba(255,255,255,.15)';
   fin.textContent='סיכום';fin.onclick=()=>{cur=TOTAL;renderScore();};wrap.appendChild(fin);
